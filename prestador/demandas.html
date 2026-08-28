@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace de Demandas · Demanda Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#F1ECDE; --ink:#1B2427; --ink-soft:#4B5559; --amber:#F0A202; --teal:#12525A; --line:#D3C9AC; --white:#FBF9F3; --radius:2px; --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace; }
+  *{ box-sizing:border-box; } body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.04) 1px, transparent 1px); background-size:4px 4px; pointer-events:none; }
+  
+  .topbar{ display:flex; justify-content:space-between; align-items:center; padding:16px 24px; background:var(--white); border-bottom:1px solid var(--line); }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.1rem; }
+  .brand span{ color:var(--amber); }
+  .nav-links a{ margin-left:16px; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); text-decoration:none; }
+  .nav-links a.active{ color:var(--teal); font-weight:600; border-bottom:2px solid var(--teal); }
+
+  .wrap{ max-width:700px; margin:0 auto; padding:24px; }
+  
+  .filters{ display:flex; gap:12px; margin-bottom:24px; overflow-x:auto; padding-bottom:8px; }
+  .filter-chip{
+    background:var(--white); border:1px solid var(--line); padding:8px 16px; border-radius:100px;
+    font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); cursor:pointer; white-space:nowrap;
+  }
+  .filter-chip.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  .demand-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; margin-bottom:16px; box-shadow:3px 3px 0 var(--line); transition:0.15s;
+  }
+  .demand-card:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); border-color:var(--ink); }
+  
+  .demand-header{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .demand-tag{ font-family:var(--font-mono); font-size:0.65rem; text-transform:uppercase; background:var(--paper); padding:4px 8px; border-radius:var(--radius); color:var(--teal); font-weight:600; }
+  .demand-time{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); }
+  
+  .demand-title{ font-family:var(--font-display); font-size:1.1rem; font-weight:600; margin:0 0 8px; }
+  .demand-desc{ font-size:0.88rem; color:var(--ink-soft); line-height:1.5; margin:0 0 16px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  
+  .demand-footer{ display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--line); padding-top:14px; }
+  .demand-location{ font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); display:flex; align-items:center; gap:6px; }
+  
+  .btn-view{
+    background:var(--teal); color:var(--white); border:none; padding:8px 16px;
+    font-family:var(--font-mono); font-size:0.75rem; font-weight:600; border-radius:var(--radius);
+    cursor:pointer; text-decoration:none;
+  }
+  .btn-view:hover{ background:var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Demanda<span>rápida</span></div>
+  <div class="nav-links">
+    <a href="detalhe-demandas-do-cliente.html">Minhas Demandas</a>
+    <a href="demandas.html" class="active">Marketplace</a>
+    <a href="meu-perfil.html">Perfil</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <h2 style="font-family:var(--font-display); margin-top:0;">Demandas na sua região</h2>
+  
+  <div class="filters">
+    <div class="filter-chip active">Todas</div>
+    <div class="filter-chip">Elétrica</div>
+    <div class="filter-chip">Hidráulica</div>
+    <div class="filter-chip">Pintura</div>
+    <div class="filter-chip">Águas Claras</div>
+  </div>
+
+  <!-- Card de Demanda 1 -->
+  <div class="demand-card">
+    <div class="demand-header">
+      <span class="demand-tag">Elétrica</span>
+      <span class="demand-time">Há 2 horas</span>
+    </div>
+    <h3 class="demand-title">Instalação de chuveiro e troca de tomada</h3>
+    <p class="demand-desc">Preciso instalar um chuveiro elétrico novo (4400w) e trocar uma tomada que está derretendo no banheiro. O quadro de luz já está preparado.</p>
+    <div class="demand-footer">
+      <span class="demand-location">📍 Águas Claras, Brasília</span>
+      <a href="detalhe-demandas-do-cliente.html" class="btn-view">Ver e Propor →</a>
+    </div>
+  </div>
+
+  <!-- Card de Demanda 2 -->
+  <div class="demand-card">
+    <div class="demand-header">
+      <span class="demand-tag">Hidráulica</span>
+      <span class="demand-time">Há 5 horas</span>
+    </div>
+    <h3 class="demand-title">Vazamento em torneira de cozinha</h3>
+    <p class="demand-desc">Torneira da pia da cozinha está pingando constantemente. Acredito que seja só trocar o refil, mas preciso de um profissional para avaliar.</p>
+    <div class="demand-footer">
+      <span class="demand-location">📍 Sudoeste, Brasília</span>
+      <a href="detalhe-demandas-do-cliente.html" class="btn-view">Ver e Propor →</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

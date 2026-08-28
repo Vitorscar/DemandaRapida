@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhar Demanda #1088 · Demanda Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; }
+
+  .topbar{ background:var(--white); border-bottom:1px solid var(--line); padding:16px 24px; }
+  .topbar-inner{ max-width:700px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.1rem; }
+  .brand span{ color:var(--amber); }
+  .topbar-inner a{ font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); }
+
+  .wrap{ max-width:700px; margin:0 auto; padding:32px 24px 60px; }
+
+  .status-card{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:4px 4px 0 var(--line); overflow:hidden; margin-bottom:24px; }
+  
+  .status-header{ background:var(--ink); color:var(--paper); padding:20px 26px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .os-id{ font-family:var(--font-mono); font-size:0.85rem; font-weight:600; }
+  .status-badge{ font-family:var(--font-mono); font-size:0.7rem; padding:6px 12px; border-radius:100px; background:var(--amber); color:var(--ink); font-weight:600; }
+  .status-badge.em-andamento{ background:var(--teal-soft); color:var(--white); }
+  .status-badge.concluida{ background:var(--teal); color:var(--white); }
+
+  .service-title{ padding:24px 26px 8px; }
+  .service-title h1{ font-family:var(--font-display); font-size:1.5rem; font-weight:700; margin:0 0 8px; }
+  .service-meta{ font-size:0.85rem; color:var(--ink-soft); font-family:var(--font-mono); }
+
+  /* Stepper */
+  .stepper{ padding:32px 26px; display:flex; gap:0; position:relative; }
+  .step{ flex:1; text-align:center; position:relative; z-index:1; }
+  .step:not(:last-child)::after{
+    content:""; position:absolute; top:12px; left:60%; width:80%; height:2px; background:var(--line); z-index:0;
+  }
+  .step.done:not(:last-child)::after{ background:var(--teal-soft); }
+  .step .dot{ width:24px; height:24px; border-radius:50%; background:var(--white); border:2px solid var(--line); margin:0 auto 12px; position:relative; z-index:1; display:flex; align-items:center; justify-content:center; font-size:0.7rem; }
+  .step.done .dot{ background:var(--teal-soft); border-color:var(--teal-soft); color:var(--white); }
+  .step.current .dot{ background:var(--amber); border-color:var(--amber); color:var(--ink); animation:pulse 2s infinite; }
+  .step .label{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em; }
+  .step.done .label, .step.current .label{ color:var(--ink); font-weight:600; }
+  .step .time{ font-size:0.7rem; color:var(--ink-soft); margin-top:4px; font-family:var(--font-mono); }
+
+  @keyframes pulse{
+    0%, 100%{ box-shadow:0 0 0 0 rgba(240,162,2,0.4); }
+    50%{ box-shadow:0 0 0 8px rgba(240,162,2,0); }
+  }
+
+  .divider{ height:1px; background:var(--line); margin:0 26px; }
+
+  .info-section{ padding:24px 26px; }
+  .section-label{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--teal); margin-bottom:16px; }
+
+  .provider-card{ display:flex; align-items:center; gap:16px; padding:16px; background:var(--paper); border-radius:var(--radius); margin-bottom:20px; }
+  .provider-avatar{ width:50px; height:50px; background:var(--white); border:1px solid var(--line); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
+  .provider-info{ flex:1; }
+  .provider-name{ font-weight:600; font-size:0.95rem; margin-bottom:4px; }
+  .provider-contact{ font-size:0.82rem; color:var(--ink-soft); font-family:var(--font-mono); }
+
+  .timeline{ border-left:2px solid var(--line); padding-left:24px; margin-top:20px; }
+  .timeline-item{ position:relative; margin-bottom:24px; }
+  .timeline-item::before{
+    content:""; position:absolute; left:-29px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--line);
+  }
+  .timeline-item.done::before{ background:var(--teal-soft); }
+  .timeline-time{ font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); margin-bottom:4px; }
+  .timeline-text{ font-size:0.88rem; margin:0; }
+
+  .actions{ padding:20px 26px 26px; background:var(--paper); border-top:1px solid var(--line); display:flex; gap:10px; flex-wrap:wrap; }
+  .action-btn{ padding:10px 16px; font-size:0.8rem; font-weight:600; border-radius:var(--radius); border:1px solid var(--line); background:var(--white); cursor:pointer; font-family:var(--font-mono); }
+  .action-btn:hover{ background:var(--white); box-shadow:2px 2px 0 var(--line); }
+
+  .security-note{ text-align:center; font-size:0.75rem; color:var(--ink-soft); margin-top:32px; font-family:var(--font-mono); padding:12px; border:1px dashed var(--line); border-radius:var(--radius); }
+
+  @media (max-width:640px){
+    .stepper{ padding:24px 16px; }
+    .step .label{ font-size:0.6rem; }
+    .step:not(:last-child)::after{ display:none; }
+    .timeline{ padding-left:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Demanda<span>rápida</span></div>
+    <a href="../index.html">Área do cliente</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="status-card">
+    <div class="status-header">
+      <span class="os-id">Demanda #1088</span>
+      <span class="status-badge em-andamento">EM ANDAMENTO</span>
+    </div>
+
+    <div class="service-title">
+      <h1>Instalação elétrica — cômodo extra</h1>
+      <div class="service-meta">
+        Criada em 26/08/2026 · Valor: R$ 250,00
+      </div>
+    </div>
+
+    <!-- Stepper de Status -->
+    <div class="stepper">
+      <div class="step done">
+        <div class="dot">✓</div>
+        <div class="label">Demanda<br>Publicada</div>
+        <div class="time">26/08 14:30</div>
+      </div>
+      <div class="step done">
+        <div class="dot">✓</div>
+        <div class="label">Proposta<br>Aceita</div>
+        <div class="time">26/08 16:45</div>
+      </div>
+      <div class="step current">
+        <div class="dot">●</div>
+        <div class="label">Em<br>Andamento</div>
+        <div class="time">27/08 09:00</div>
+      </div>
+      <div class="step">
+        <div class="dot"></div>
+        <div class="label">Concluída</div>
+        <div class="time">-</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-section">
+      <div class="section-label">Prestador Responsável</div>
+      <div class="provider-card">
+        <div class="provider-avatar">👨‍🔧</div>
+        <div class="provider-info">
+          <div class="provider-name">Carlos Silva - Elétrica</div>
+          <div class="provider-contact">📞 (61) 99999-9999</div>
+        </div>
+        <a href="../publico/perfil-publico.html?id=123" class="action-btn">Ver Perfil</a>
+      </div>
+
+      <div class="section-label">Atualizações do Serviço</div>
+      <div class="timeline">
+        <div class="timeline-item done">
+          <div class="timeline-time">27/08/2026 às 09:00</div>
+          <p class="timeline-text"><strong>Serviço iniciado</strong> - Prestador chegou ao local e começou a instalação.</p>
+        </div>
+        <div class="timeline-item done">
+          <div class="timeline-time">26/08/2026 às 16:45</div>
+          <p class="timeline-text"><strong>Proposta aceita</strong> - Você aceitou a proposta de Carlos Silva por R$ 250,00.</p>
+        </div>
+        <div class="timeline-item done">
+          <div class="timeline-time">26/08/2026 às 14:30</div>
+          <p class="timeline-text"><strong>Demanda publicada</strong> - Sua solicitação foi enviada para profissionais da região.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn" onclick="window.print()">📄 Imprimir Demanda</button>
+      <button class="action-btn" onclick="contatarPrestador()">📞 Contatar Prestador</button>
+      <button class="action-btn" onclick="reportarProblema()">⚠️ Reportar Problema</button>
+    </div>
+  </div>
+
+  <div class="security-note">
+    🔒 Esta página é segura e exclusiva para acompanhamento da sua Demanda. Não compartilhe este link.
+  </div>
+</div>
+
+<script>
+  // Funções de ação
+  function contatarPrestador(){
+    window.location.href = 'tel:+5561999999999';
+  }
+
+  function reportarProblema(){
+    const mensagem = prompt('Descreva o problema encontrado:');
+    if(mensagem){
+      alert('Problema reportado! Nossa equipe entrará em contato em breve.');
+      // Aqui iria um POST para /api/report-problem
+    }
+  }
+
+  // Carregar dados da Demanda via URL token
+  // Ex: status-publico.html?token=abc123xyz
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const osId = urlParams.get('os');
+  const demandaId = urlParams.get('demanda');
+
+  if(token || osId || demandaId){
+    // fetchOSData(token || osId);
+    console.log('Carregando Demanda:', token || demandaId);
+  } else {
+    // Em produção, redirecionar ou mostrar erro
+    console.warn('Token ou Demanda ID não fornecido');
+  }
+
+  // Atualização automática a cada 30 segundos
+  setInterval(() => {
+    // fetchOSStatus();
+    console.log('Atualizando status...');
+  }, 30000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu perfil · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  img{ max-width:100%; display:block; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; z-index:0; }
+
+  .app{ display:grid; grid-template-columns:220px 1fr; min-height:100vh; position:relative; z-index:1; }
+  aside{ background:var(--ink); color:var(--paper); padding:28px 20px; display:flex; flex-direction:column; gap:36px; }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; display:flex; align-items:baseline; gap:6px; }
+  .brand span{ color:var(--amber); font-family:var(--font-mono); font-size:0.7rem; font-weight:600; border:1px solid var(--amber); padding:2px 5px; border-radius:var(--radius); }
+  nav{ display:flex; flex-direction:column; gap:2px; }
+  .nav-item{ display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:var(--radius); font-size:0.9rem; color:rgba(241,236,222,0.65); border-left:2px solid transparent; }
+  .nav-item.active{ color:var(--white); background:rgba(240,162,2,0.12); border-left:2px solid var(--amber); font-weight:500; }
+  .nav-icon{ width:16px; text-align:center; font-size:0.85rem; }
+  .sidebar-foot{ margin-top:auto; padding-top:20px; border-top:1px solid rgba(241,236,222,0.14); font-size:0.75rem; color:rgba(241,236,222,0.5); line-height:1.5; }
+  .plan-tag{ display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:0.68rem; color:var(--amber); border:1px dashed rgba(240,162,2,0.5); padding:3px 6px; border-radius:var(--radius); }
+
+  main{ padding:30px 40px 60px; max-width:840px; }
+  .topbar h1{ font-family:var(--font-display); font-weight:600; font-size:1.7rem; margin:0 0 4px; }
+  .topbar .sub{ font-size:0.85rem; color:var(--ink-soft); margin-bottom:26px; }
+
+  .layout{ display:grid; grid-template-columns:1fr 260px; gap:24px; align-items:start; }
+
+  .panel{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:3px 3px 0 var(--line); margin-bottom:20px; overflow:hidden; }
+  .panel-head{ background:var(--paper-deep); padding:12px 20px; font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); }
+  .panel-body{ padding:20px; }
+
+  .avatar-row{ display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+  .avatar-edit{ width:70px; height:70px; border-radius:50%; background:var(--teal); position:relative; flex-shrink:0; }
+  .avatar-edit::after{ content:"✎"; position:absolute; bottom:-2px; right:-2px; width:22px; height:22px; background:var(--amber); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; border:2px solid var(--white); }
+  .avatar-label{ font-size:0.8rem; color:var(--ink-soft); }
+
+  .field{ margin-bottom:16px; }
+  label{ display:block; font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:7px; }
+  input, textarea{
+    width:100%; font-family:var(--font-body); font-size:0.9rem; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:11px 13px; outline:none;
+  }
+  input:focus, textarea:focus{ border-color:var(--teal); background:var(--white); }
+  textarea{ resize:vertical; min-height:80px; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+  .chip-select{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip-option{ font-size:0.78rem; padding:7px 13px; border:1px solid var(--line); background:var(--paper); border-radius:100px; color:var(--ink-soft); }
+  .chip-option.selected{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .chip-option.add{ border-style:dashed; }
+
+  .photo-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .photo-slot{ aspect-ratio:1/1; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); position:relative; }
+  .photo-slot img{ width:100%; height:100%; object-fit:cover; }
+  .photo-slot.empty{ display:flex; align-items:center; justify-content:center; background:var(--paper); border-style:dashed; color:var(--ink-soft); font-size:1.3rem; }
+
+  .save-btn{
+    background:var(--amber); color:var(--ink); border:none; padding:13px 24px; font-weight:600; font-size:0.88rem;
+    border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink); transition:transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .save-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+
+  /* preview + stats sidebar */
+  .preview-card{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:3px 3px 0 var(--line); padding:20px; text-align:center; }
+  .preview-card .avatar-p{ width:60px; height:60px; border-radius:50%; background:var(--teal); margin:0 auto 10px; }
+  .preview-card .name{ font-family:var(--font-display); font-weight:600; font-size:1rem; }
+  .preview-card .loc{ font-size:0.75rem; color:var(--ink-soft); margin-bottom:8px; }
+  .preview-card .stars{ color:var(--amber-deep); font-size:0.85rem; font-family:var(--font-mono); }
+  .preview-link{ display:block; margin-top:12px; font-size:0.75rem; color:var(--teal); font-family:var(--font-mono); }
+
+  .verify-stats{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:3px 3px 0 var(--line); padding:18px 20px; margin-top:20px; }
+  .verify-stats .vs-label{ font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--teal); margin-bottom:12px; }
+  .vs-row{ display:flex; justify-content:space-between; font-size:0.82rem; padding:6px 0; border-bottom:1px dashed var(--paper-deep); }
+  .vs-row:last-child{ border-bottom:none; }
+  .vs-row b{ font-family:var(--font-mono); }
+  .vs-row.verified b{ color:var(--teal-soft); }
+
+  @media (max-width:820px){ .layout{ grid-template-columns:1fr; } }
+  @media (max-width:720px){
+    .app{ grid-template-columns:1fr; }
+    aside{ flex-direction:row; align-items:center; padding:16px 18px; gap:20px; overflow-x:auto; }
+    aside nav{ flex-direction:row; gap:4px; } .sidebar-foot{ display:none; }
+    main{ padding:22px 18px 50px; }
+    .field-row{ grid-template-columns:1fr; }
+    .photo-grid{ grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside>
+  <div class="brand">Demanda<span>rápida</span></div>
+  <nav>
+    <!-- ESTE É O LOCAL DOS SEUS TRABALHOS CONTRATADOS -->
+    <a class="nav-item active" href="detalhe-demandas-do-cliente.html">
+      <span class="nav-icon">▤</span> Minhas Demandas (Contratadas)
+    </a>
+    
+    <!-- ESTE É O MARKETPLACE (TRABALHOS PARA CONCORRER) -->
+    <a class="nav-item" href="demandas.html">
+      <span class="nav-icon">✉</span> Demandas disponíveis
+    </a>
+    
+    <a class="nav-item" href="../prestador/meu-perfil.html">
+      <span class="nav-icon">◎</span> Meu perfil público
+    </a>
+    
+    <a class="nav-item" href="../prestador/planos.html">
+      <span class="nav-icon">⚑</span> Plano
+    </a>
+  </nav>
+  
+  <div class="sidebar-foot">
+    João Marcos<br>
+    Elétrica residencial
+    <div class="plan-tag">plano ativo</div>
+  </div>
+</aside>
+
+  <main>
+    <div class="topbar">
+      <h1>Meu perfil público</h1>
+      <div class="sub">É isso que os clientes veem no diretório. <a href="../prestador/meu-perfil.html" style="color:var(--teal); font-family:var(--font-mono); font-size:0.8rem;">ver como está →</a></div>
+    </div>
+
+    <div class="layout">
+      <div>
+        <div class="panel">
+          <div class="panel-head">Sobre você</div>
+          <div class="panel-body">
+            <div class="avatar-row">
+              <div class="avatar-edit"></div>
+              <div class="avatar-label">Foto de perfil<br><span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--teal);">alterar foto</span></div>
+            </div>
+
+            <div class="field">
+              <label for="bio">Bio</label>
+              <textarea id="bio">Eletricista há 11 anos, atendendo Asa Norte, Asa Sul e Taguatinga. Trabalho com instalação, manutenção e revisão de quadros elétricos residenciais e prediais.</textarea>
+            </div>
+
+            <div class="field-row">
+              <div class="field"><label for="cidade">Cidade</label><input type="text" id="cidade" value="Brasília"></div>
+              <div class="field"><label for="bairro">Região que atende</label><input type="text" id="bairro" value="Asa Norte, Asa Sul, Taguatinga"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">Tipos de serviço</div>
+          <div class="panel-body">
+            <div class="chip-select">
+              <span class="chip-option selected">Elétrica residencial</span>
+              <span class="chip-option selected">Quadros e disjuntores</span>
+              <span class="chip-option selected">Instalações prediais</span>
+              <span class="chip-option">Ar-condicionado</span>
+              <span class="chip-option add">+ adicionar</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">Fotos do portfólio</div>
+          <div class="panel-body">
+            <div class="photo-grid">
+              <div class="photo-slot"><img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=200&h=200&fit=crop" alt=""></div>
+              <div class="photo-slot"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop" alt=""></div>
+              <div class="photo-slot"><img src="https://images.unsplash.com/photo-1621905252472-e8de6f14b127?w=200&h=200&fit=crop" alt=""></div>
+              <div class="photo-slot empty">+</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="save-btn">Salvar alterações</button>
+      </div>
+
+      <div>
+        <div class="preview-card">
+          <div class="avatar-p"></div>
+          <div class="name">João Marcos</div>
+          <div class="loc">Asa Norte, Brasília</div>
+          <div class="stars">★★★★★ 4.9</div>
+          <a class="preview-link" href="../publico/perfil-publico.html">visualizar perfil →</a>
+        </div>
+
+        <div class="verify-stats">
+          <div class="vs-label">Reputação</div>
+          <div class="vs-row"><span>Serviços totais</span><b>127</b></div>
+          <div class="vs-row"><span>Pelo marketplace</span><b>83</b></div>
+          <div class="vs-row"><span>Externos</span><b>44</b></div>
+          <div class="vs-row verified"><span>Externos confirmados</span><b>31</b></div>
+          <div class="vs-row verified"><span>✓ Avaliações verificadas</span><b>96</b></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhar serviço · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; }
+
+  .sitebar{ display:flex; justify-content:center; padding:18px 24px; font-family:var(--font-mono); font-size:0.75rem; }
+  .sitebar .brand{ font-family:var(--font-display); font-weight:700; color:var(--ink); font-size:0.95rem; display:inline-flex; gap:6px; }
+  .sitebar .brand span{ color:var(--amber); }
+
+  .wrap{ max-width:600px; margin:0 auto; padding:12px 24px 80px; position:relative; }
+
+  .status-hero{ text-align:center; padding:20px 0 30px; }
+  .status-hero .eyebrow{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--teal); margin-bottom:10px; }
+  .status-hero h1{ font-family:var(--font-display); font-size:1.6rem; font-weight:700; margin:0 0 8px; }
+  .status-hero .os-id{ font-family:var(--font-mono); font-size:0.8rem; color:var(--ink-soft); }
+
+  .big-stamp{
+    display:inline-block; margin-top:16px; font-family:var(--font-display); font-weight:700; font-size:0.95rem;
+    padding:10px 22px; border-radius:var(--radius); border:2px solid var(--amber-deep); color:var(--amber-deep);
+    transform:rotate(-2deg); text-transform:uppercase; letter-spacing:0.03em;
+  }
+
+  /* timeline */
+  .timeline{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:4px 4px 0 var(--line); padding:26px 26px 10px; }
+  .tl-item{ display:grid; grid-template-columns:24px 1fr; gap:14px; padding-bottom:26px; position:relative; }
+  .tl-item:not(:last-child)::before{ content:""; position:absolute; left:11px; top:24px; bottom:-2px; width:2px; background:var(--line); }
+  .tl-item.done:not(:last-child)::before{ background:var(--teal-soft); }
+  .tl-dot{ width:24px; height:24px; border-radius:50%; background:var(--paper); border:2px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:0.65rem; }
+  .tl-item.done .tl-dot{ background:var(--teal-soft); border-color:var(--teal-soft); color:var(--white); }
+  .tl-item.current .tl-dot{ background:var(--amber); border-color:var(--amber); color:var(--ink); }
+  .tl-title{ font-weight:600; font-size:0.92rem; margin-bottom:2px; }
+  .tl-item.current .tl-title{ color:var(--amber-deep); }
+  .tl-time{ font-size:0.75rem; color:var(--ink-soft); font-family:var(--font-mono); }
+  .tl-desc{ font-size:0.82rem; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+
+  .provider-card{
+    margin-top:22px; background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 20px; display:flex; align-items:center; gap:14px;
+  }
+  .provider-avatar{ width:46px; height:46px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+  .provider-info .name{ font-weight:600; font-size:0.92rem; }
+  .provider-info .sub{ font-size:0.78rem; color:var(--ink-soft); font-family:var(--font-mono); }
+  .contact-btn{ margin-left:auto; border:1px solid var(--line); background:var(--paper); padding:9px 14px; border-radius:100px; font-size:0.78rem; }
+
+  .photos-note{ margin-top:22px; padding:16px 18px; border:1px dashed var(--line); border-radius:var(--radius); font-size:0.82rem; color:var(--ink-soft); text-align:center; }
+
+  footer{ text-align:center; padding:30px 0 10px; font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="sitebar"><div class="brand">Demanda<span>rápida</span></div></div>
+
+<div class="wrap">
+  <div class="status-hero">
+    <div class="eyebrow">Acompanhamento de serviço</div>
+    <h1>Instalação elétrica — cômodo extra</h1>
+    <div class="os-id">OS #1088 · Águas Claras, Brasília</div>
+    <span class="big-stamp">Em andamento</span>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item done">
+      <div class="tl-dot">✓</div>
+      <div>
+        <div class="tl-title">Serviço confirmado</div>
+        <div class="tl-time">26 ago, 19:40</div>
+        <div class="tl-desc">Você confirmou o serviço com Carlos Elétrica.</div>
+      </div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-dot">✓</div>
+      <div>
+        <div class="tl-title">Agendado</div>
+        <div class="tl-time">27 ago, 08:10</div>
+        <div class="tl-desc">Carlos confirmou a visita para 28/08.</div>
+      </div>
+    </div>
+    <div class="tl-item current">
+      <div class="tl-dot">●</div>
+      <div>
+        <div class="tl-title">Em andamento</div>
+        <div class="tl-time">28 ago, 09:15</div>
+        <div class="tl-desc">Carlos está a caminho do local.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">○</div>
+      <div>
+        <div class="tl-title">Concluído</div>
+        <div class="tl-time">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="provider-card">
+    <div class="provider-avatar"></div>
+    <div class="provider-info">
+      <div class="name">Carlos Elétrica</div>
+      <div class="sub">★★★★★ 4.9 · 127 serviços</div>
+    </div>
+    <button class="contact-btn">Ver perfil</button>
+  </div>
+
+  <div class="photos-note">Fotos do serviço aparecerão aqui quando o prestador atualizar o andamento.</div>
+
+  <footer>OS Rápida · acompanhamento sem necessidade de login</footer>
+</div>
+
+</body>
+</html>

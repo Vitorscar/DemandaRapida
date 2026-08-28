@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serviços Contratados · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; height:100%; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; z-index:0; }
+
+  .app{ display:grid; grid-template-columns:220px 1fr; min-height:100vh; position:relative; z-index:1; }
+  
+  /* ---------- SIDEBAR ---------- */
+  aside{ background:var(--ink); color:var(--paper); padding:28px 20px; display:flex; flex-direction:column; gap:36px; }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; display:flex; align-items:baseline; gap:6px; }
+  .brand span{ color:var(--amber); font-family:var(--font-mono); font-size:0.7rem; font-weight:600; border:1px solid var(--amber); padding:2px 5px; border-radius:var(--radius); }
+  nav{ display:flex; flex-direction:column; gap:2px; }
+  .nav-item{ display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:var(--radius); font-size:0.9rem; color:rgba(241,236,222,0.65); border-left:2px solid transparent; transition:0.15s; }
+  .nav-item:hover{ color:var(--paper); background:rgba(241,236,222,0.06); }
+  .nav-item.active{ color:var(--white); background:rgba(18,82,90,0.25); border-left:2px solid var(--teal); font-weight:500; } /* Destaque em Teal para OS */
+  .nav-icon{ width:16px; text-align:center; font-size:0.85rem; }
+  .sidebar-foot{ margin-top:auto; padding-top:20px; border-top:1px solid rgba(241,236,222,0.14); font-size:0.75rem; color:rgba(241,236,222,0.5); line-height:1.5; }
+  .role-tag{ display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:0.68rem; color:var(--teal-soft); border:1px dashed rgba(62,124,107,0.5); padding:3px 6px; border-radius:var(--radius); }
+
+  /* ---------- MAIN ---------- */
+  main{ padding:30px 40px 60px; max-width:980px; }
+  .topbar{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; flex-wrap:wrap; gap:16px; }
+  .topbar h1{ font-family:var(--font-display); font-weight:600; font-size:1.7rem; margin:0 0 2px; letter-spacing:-0.01em; }
+  .topbar .sub{ font-size:0.85rem; color:var(--ink-soft); font-family:var(--font-mono); }
+  
+  .new-btn{
+    background:var(--amber); color:var(--ink); border:none; padding:12px 20px; font-weight:600; font-size:0.88rem;
+    border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink); transition:transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .new-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+
+  .toolbar{ display:flex; gap:14px; margin:26px 0 22px; flex-wrap:wrap; align-items:center; }
+  .search-input{
+    flex:1; min-width:200px; font-family:var(--font-body); font-size:0.88rem; padding:11px 14px;
+    border:1px solid var(--line); border-radius:var(--radius); background:var(--white); outline:none;
+  }
+  .search-input:focus{ border-color:var(--teal); }
+  .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ font-size:0.78rem; padding:7px 13px; border:1px solid var(--line); background:var(--white); border-radius:100px; color:var(--ink-soft); cursor:pointer; transition:0.15s; }
+  .chip:hover{ border-color:var(--ink); }
+  .chip.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  /* ---------- TICKET LIST (Adaptado para OS) ---------- */
+  .ticket-list{ display:flex; flex-direction:column; gap:16px; }
+  .ticket{
+    display:grid; grid-template-columns:96px 1fr; background:var(--white); border:1px solid var(--line);
+    border-radius:var(--radius); overflow:hidden; transition:box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  .ticket:hover{ box-shadow:4px 4px 0 var(--line); transform:translate(-1px,-1px); border-color:var(--ink); }
+  
+  .ticket-stub{
+    background:var(--teal); /* Teal para indicar "Fechado/Contratado" */
+    color:var(--white); padding:16px 12px; display:flex; flex-direction:column;
+    justify-content:space-between; position:relative; border-right:2px dashed var(--paper-deep);
+  }
+  .ticket-stub.concluido{ background:var(--ink); }
+  .ticket-stub.cancelado{ background:var(--ink-soft); }
+  
+  .ticket-stub::before, .ticket-stub::after{ content:""; position:absolute; right:-7px; width:14px; height:14px; background:var(--paper); border-radius:50%; }
+  .ticket-stub::before{ top:-7px; } .ticket-stub::after{ bottom:-7px; }
+  
+  .ticket-date{ font-family:var(--font-mono); font-size:0.95rem; font-weight:600; line-height:1.2; }
+  .ticket-date small{ display:block; font-size:0.62rem; font-weight:400; color:rgba(255,255,255,0.6); margin-top:2px; }
+  .ticket-value{ font-family:var(--font-mono); font-size:0.75rem; color:var(--amber); margin-top:6px; font-weight:600; }
+
+  .ticket-body{ padding:16px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+  .ticket-main{ min-width:220px; flex:1; }
+  .ticket-service{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin-bottom:6px; }
+  
+  .provider-info{ display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .provider-avatar{ width:24px; height:24px; background:var(--paper-deep); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; }
+  .provider-name{ font-size:0.85rem; color:var(--ink); font-weight:500; }
+  
+  .ticket-loc{ font-size:0.8rem; color:var(--ink-soft); display:flex; align-items:center; gap:4px; }
+  
+  .stamp{
+    font-family:var(--font-display); font-weight:700; font-size:0.7rem; letter-spacing:0.03em; padding:6px 11px;
+    border-radius:var(--radius); text-transform:uppercase; transform:rotate(-3deg); white-space:nowrap; border:2px solid currentColor;
+  }
+  .stamp.agendado{ color:var(--amber-deep); border-color:var(--amber-deep); }
+  .stamp.andamento{ color:var(--teal); border-color:var(--teal); background:rgba(18,82,90,0.05); }
+  .stamp.concluido{ color:var(--teal-soft); border-style: dashed; }
+  .stamp.cancelado{ color:var(--danger); border-color:var(--danger); opacity:0.7; }
+
+  .ticket-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; min-width:140px; }
+  .action-btn{ 
+    font-size:0.76rem; padding:8px 14px; border:1px solid var(--line); background:var(--paper); 
+    border-radius:100px; color:var(--ink); font-weight:600; transition:0.15s; text-align:center; width:100%;
+  }
+  .ticket:hover .action-btn{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .action-btn.primary{ background:var(--teal); color:var(--white); border-color:var(--teal); }
+  .ticket:hover .action-btn.primary{ background:var(--ink); border-color:var(--ink); }
+
+  .empty-state{ text-align:center; padding:60px 20px; color:var(--ink-soft); display:none; }
+  .empty-state h3{ font-family:var(--font-display); font-size:1.2rem; color:var(--ink); margin-bottom:8px; }
+
+  @media (max-width: 768px){
+    .app{ grid-template-columns:1fr; }
+    aside{ flex-direction:row; align-items:center; padding:16px 18px; gap:20px; overflow-x:auto; }
+    aside nav{ flex-direction:row; gap:4px; } .sidebar-foot{ display:none; }
+    main{ padding:22px 18px 50px; }
+    .ticket{ grid-template-columns:70px 1fr; }
+    .ticket-body{ flex-direction:column; align-items:flex-start; }
+    .ticket-actions{ align-items:flex-start; width:100%; margin-top:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside>
+    <div class="brand">Demanda<span>rápida</span></div>
+    <nav>
+      <a class="nav-item" href="dashboard-cliente.html"><span class="nav-icon">▤</span> Visão Geral</a>
+      <a class="nav-item" href="minhas-demandas.html"><span class="nav-icon">✉</span> Minhas Demandas</a>
+      <a class="nav-item active" href="servicos-contratados.html"><span class="nav-icon">🛠️</span> Serviços Contratados</a>
+      <a class="nav-item" href="meu-perfil.html"><span class="nav-icon">⚙️</span> Meus Dados</a>
+      <a class="nav-item" href="../index.html" style="color:var(--danger);"><span class="nav-icon">🚪</span> Sair</a>
+    </nav>
+    <div class="sidebar-foot">
+      Olá, Maria<br>Águas Claras, DF
+      <div class="role-tag">conta cliente</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div>
+        <h1>Serviços Contratados</h1>
+        <div class="sub">Acompanhe a execução, checklist e avaliações dos seus serviços.</div>
+      </div>
+      <a class="new-btn" href="nova-demanda.html">＋ Nova Demanda</a>
+    </div>
+
+    <div class="toolbar">
+      <input class="search-input" id="search" type="text" placeholder="Buscar por serviço ou prestador...">
+    </div>
+    <div class="filters" id="filters">
+      <span class="chip active" data-filter="all">Todos</span>
+      <span class="chip" data-filter="agendado">Agendados</span>
+      <span class="chip" data-filter="andamento">Em Andamento</span>
+      <span class="chip" data-filter="concluido">Concluídos</span>
+    </div>
+
+    <div class="ticket-list" id="list"></div>
+    
+    <div class="empty-state" id="empty">
+      <h3>Nenhum serviço contratado ainda</h3>
+      <p>Quando você aceitar uma proposta de um prestador, ela aparecerá aqui como uma Ordem de Serviço.</p>
+      <a class="new-btn" href="nova-demanda.html" style="margin-top:20px; display:inline-block;">Criar minha primeira demanda</a>
+    </div>
+  </main>
+</div>
+
+<script>
+
+// Dados simulados de DEMANDAS
+
+const ORDERS = [
+
+  { 
+    id: 1088,
+    type: "demanda",
+    title: "Instalação elétrica — cômodo extra", 
+    provider: "Carlos Silva",
+    avatar: "👨‍🔧",
+    date: "28/08",
+    value: "R$ 250,00",
+    loc: "Águas Claras", 
+    status: "andamento",
+    statusLabel: "Em andamento",
+    actionText: "Acompanhar",
+    actionLink: "detalhe-demanda-cliente.html?id=1088"
+  },
+
+  { 
+    id: 1095,
+    type: "demanda",
+    title: "Limpeza profunda de sofá 3 lugares", 
+    provider: "LavaJato Express",
+    avatar: "🛋️",
+    date: "02/09",
+    value: "R$ 180,00",
+    loc: "Águas Claras", 
+    status: "agendado",
+    statusLabel: "Agendado",
+    actionText: "Ver Detalhes",
+    actionLink: "detalhe-demanda-cliente.html?id=1095"
+  },
+
+  { 
+    id: 950,
+    type: "demanda",
+    title: "Troca de resistência do chuveiro", 
+    provider: "João Marcos",
+    avatar: "🔧",
+    date: "15/08",
+    value: "R$ 80,00",
+    loc: "Águas Claras", 
+    status: "concluido",
+    statusLabel: "Concluído",
+    actionText: "Ver Avaliação",
+    actionLink: "detalhe-demanda-cliente.html?id=950"
+  },
+
+  { 
+    id: 912,
+    type: "demanda",
+    title: "Reparo em porta de armário", 
+    provider: "Marcenaria Top",
+    avatar: "🪵",
+    date: "10/08",
+    value: "R$ 120,00",
+    loc: "Sudoeste", 
+    status: "cancelado",
+    statusLabel: "Cancelado",
+    actionText: "Ver Motivo",
+    actionLink: "#"
+  }
+
+];
+
+
+  const STAMP_LABEL = {
+    agendado: "Agendado", andamento: "Em andamento", concluido: "Concluído", cancelado: "Cancelado"
+  };
+
+  let activeFilter = "all";
+  let searchTerm = "";
+
+  function render(){
+    const list = document.getElementById("list");
+    const empty = document.getElementById("empty");
+    
+    const filtered = ORDERS.filter(d => {
+      const matchesFilter = activeFilter === "all" || d.status === activeFilter;
+      const matchesSearch = !searchTerm || 
+        d.title.toLowerCase().includes(searchTerm) || d.provider.toLowerCase().includes(searchTerm);
+      return matchesFilter && matchesSearch;
+    });
+
+    list.innerHTML = "";
+    empty.style.display = filtered.length ? "none" : "block";
+
+    filtered.forEach(d => {
+      const el = document.createElement("div");
+      el.className = "ticket";
+      el.innerHTML = `
+        <div class="ticket-stub ${d.status}">
+          <span class="ticket-date">${d.date}<small>OS #${d.id}</small></span>
+          <span class="ticket-value">${d.value}</span>
+        </div>
+        <div class="ticket-body">
+          <div class="ticket-main">
+            <div class="ticket-service">${d.title}</div>
+            <div class="provider-info">
+              <div class="provider-avatar">${d.avatar}</div>
+              <span class="provider-name">${d.provider}</span>
+            </div>
+            <div class="ticket-loc">📍 ${d.loc}</div>
+          </div>
+          
+          <div class="ticket-actions">
+            <span class="stamp ${d.status}">${STAMP_LABEL[d.status]}</span>
+            <a class="action-btn ${d.status === 'andamento' ? 'primary' : ''}" href="${d.actionLink}">${d.actionText} →</a>
+          </div>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+  }
+
+  document.getElementById("filters").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if(!chip) return;
+    document.querySelectorAll("#filters .chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    activeFilter = chip.dataset.filter;
+    render();
+  });
+
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+</script>
+
+</body>
+</html>

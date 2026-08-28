@@ -1,0 +1,116 @@
+os-rapida/
+│
+├── index.html                      # login (prestador OU cliente)
+├── cadastro.html                   # cadastro novo (escolhe tipo: cliente ou prestador)
+├── cadastro-cliente.html           # cadastro específico do cliente
+├── cadastro-prestador.html         # cadastro específico do prestador
+│
+├── cliente/                        # ÁREA DO CLIENTE
+│   ├── dashboard-cliente.html      # minhas demandas + minhas OS
+│   ├── nova-demanda.html           # publicar nova demanda
+│   ├── minhas-demandas.html        # listar demandas (status)
+│   ├── detalhe-demanda-cliente.html# acompanhar propostas recebidas
+│   └── detalhe-os-cliente.html     # ver OS contratada
+│
+├── prestador/                      # ÁREA DO PRESTADOR
+│   ├── dashboard.html              # minhas OS + notificações
+│   ├── demandas.html               # marketplace: ver demandas disponíveis
+│   ├── detalhe-demanda.html        # ver demanda + enviar proposta/aceitar
+│   ├── nova-os.html                # criar OS manual (sem demanda)
+│   ├── detalhe-os.html             # gerenciar OS ativa
+│   ├── meu-perfil.html             # editar perfil público
+│   └── planos.html                 # assinatura
+│
+├── publico/                        # ÁREA PÚBLICA (sem login)
+│   ├── diretorio.html              # busca prestadores
+│   ├── perfil-publico.html         # perfil do prestador
+│   └── status-publico.html         # cliente acompanha OS
+│
+├── css/
+│   ├── main.css                    # áreas logadas
+│   ├── publico.css                 # diretório + perfil público
+│   ├── marketplace.css             # NOVO — demandas e propostas
+│   └── status-publico.css
+│
+├── js/
+│   ├── supabase-client.js
+│   ├── auth.js
+│   │
+│   ├── demanda/
+│   │   ├── nova-demanda.js         # publicar demanda
+│   │   ├── listar-demandas.js      # prestador vê marketplace
+│   │   ├── proposta.js             # prestador envia proposta
+│   │   └── aceitar-proposta.js     # cliente escolhe prestador
+│   │
+│   ├── os/
+│   │   ├── os.js                   # CRUD OS
+│   │   ├── os-items.js             # checklist
+│   │   └── status-publico.js
+│   │
+│   ├── perfil/
+│   │   ├── meu-perfil.js
+│   │   ├── fotos.js
+│   │   └── avaliacoes.js
+│   │
+│   ├── diretorio/
+│   │   ├── busca.js
+│   │   └── perfil-publico.js
+│   │
+│   └── billing/
+│       └── planos.js
+│
+├── assets/
+│   └── logo/
+│
+├── python/
+│   ├── gerar_pdf.py
+│   ├── enviar_email.py
+│   ├── notificar_demanda.py        # NOVO — avisa prestadores de nova demanda na área
+│   ├── notificar_proposta.py       # NOVO — avisa cliente de nova proposta
+│   ├── notificar_nova_avaliacao.py
+│   ├── webhook_pagamento.py
+│   └── requirements.txt
+│
+└── supabase/
+    ├── schema.sql
+    │   -- users (id, tipo: cliente|prestador, nome, email, telefone)
+    │   -- clients (user_id, endereco_padrao)
+    │   -- providers (user_id, bio, cidade, bairro, plano_ativo, subscription_status)
+    │   -- service_types
+    │   -- provider_service_types (N:N)
+    │   -- provider_photos
+    │   -- demands (id, client_id, service_type_id, titulo, descricao, bairro, cidade, status: aberta|em_propostas|aceita|cancelada, data_limite)
+    │   -- proposals (id, demand_id, provider_id, valor, prazo, mensagem, status: pendente|aceita|recusada)
+    │   -- reviews (provider_id, client_id, order_id, nota, comentario)
+    │   -- orders (id, demand_id opcional, provider_id, client_id, service_type_id, valor, status)
+    │   -- order_items
+    │   -- subscriptions
+    │
+    └── rls-policies.sql
+
+
+
+    HTML QUE JÁ TENHO 
+
+    index
+    cadastro-prestador
+
+    CLIENTE/
+    Confirmar-os
+    minhas-demandas
+    status-publico
+     
+    PRESTADOR/
+    detalhe-os
+    meu-perfil
+    minhas-propostas
+    nova-os
+    planos
+
+    PUBLICO/
+    diretorio
+
+
+
+
+  

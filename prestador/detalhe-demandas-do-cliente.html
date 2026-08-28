@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OS #1088 · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; z-index:0; }
+
+  .app{ display:grid; grid-template-columns:220px 1fr; min-height:100vh; position:relative; z-index:1; }
+  aside{ background:var(--ink); color:var(--paper); padding:28px 20px; display:flex; flex-direction:column; gap:36px; }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; display:flex; align-items:baseline; gap:6px; }
+  .brand span{ color:var(--amber); font-family:var(--font-mono); font-size:0.7rem; font-weight:600; border:1px solid var(--amber); padding:2px 5px; border-radius:var(--radius); }
+  nav{ display:flex; flex-direction:column; gap:2px; }
+  .nav-item{ display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:var(--radius); font-size:0.9rem; color:rgba(241,236,222,0.65); border-left:2px solid transparent; }
+  .nav-item.active{ color:var(--white); background:rgba(240,162,2,0.12); border-left:2px solid var(--amber); font-weight:500; }
+  .nav-icon{ width:16px; text-align:center; font-size:0.85rem; }
+  .sidebar-foot{ margin-top:auto; padding-top:20px; border-top:1px solid rgba(241,236,222,0.14); font-size:0.75rem; color:rgba(241,236,222,0.5); line-height:1.5; }
+  .plan-tag{ display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:0.68rem; color:var(--amber); border:1px dashed rgba(240,162,2,0.5); padding:3px 6px; border-radius:var(--radius); }
+
+  main{ padding:30px 40px 60px; max-width:780px; }
+  .back-link{ font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); display:inline-flex; gap:6px; margin-bottom:18px; }
+
+  .slip{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:4px 4px 0 var(--line); overflow:hidden; }
+  .slip-head{
+    background:var(--ink); color:var(--paper); padding:16px 26px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .slip-head .id{ font-family:var(--font-mono); font-size:0.8rem; }
+  .slip-head .badges{ display:flex; gap:8px; }
+  .badge{ font-family:var(--font-mono); font-size:0.65rem; padding:3px 9px; border-radius:100px; border:1px solid currentColor; }
+  .badge.external{ color:var(--amber); }
+  .badge.confirmed{ color:var(--teal-soft); background:rgba(62,124,107,0.15); }
+  .badge.pending{ color:var(--amber); background:rgba(240,162,2,0.1); }
+
+  .slip-title{ padding:22px 26px 6px; }
+  .slip-title h1{ font-family:var(--font-display); font-size:1.5rem; font-weight:700; margin:0 0 6px; letter-spacing:-0.01em; }
+  .slip-meta{ font-size:0.83rem; color:var(--ink-soft); display:flex; gap:14px; flex-wrap:wrap; font-family:var(--font-mono); }
+
+  /* status stepper */
+  .stepper{ display:flex; padding:24px 26px 6px; gap:0; }
+  .step{ flex:1; text-align:center; position:relative; }
+  .step:not(:last-child)::after{
+    content:""; position:absolute; top:9px; left:56%; width:88%; height:2px; background:var(--line);
+  }
+  .step.done:not(:last-child)::after{ background:var(--teal-soft); }
+  .step .dot{ width:18px; height:18px; border-radius:50%; background:var(--white); border:2px solid var(--line); margin:0 auto 8px; position:relative; z-index:1; }
+  .step.done .dot{ background:var(--teal-soft); border-color:var(--teal-soft); }
+  .step.current .dot{ background:var(--amber); border-color:var(--amber); }
+  .step .label{ font-family:var(--font-mono); font-size:0.65rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.03em; }
+  .step.current .label{ color:var(--ink); font-weight:600; }
+
+  .divider{ height:1px; background:var(--line); margin:24px 26px; }
+  .block{ padding:0 26px 22px; }
+  .block-label{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--teal); margin-bottom:12px; }
+
+  .info-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; padding:0 26px 22px; }
+  .info-item .k{ font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+  .info-item .v{ font-size:0.92rem; font-weight:500; }
+
+  .checklist{ display:flex; flex-direction:column; gap:10px; padding:0 26px 22px; }
+  .check-item{ display:flex; align-items:center; gap:10px; font-size:0.88rem; }
+  .check-item input{ width:16px; height:16px; accent-color:var(--teal); }
+  .check-item.done span{ text-decoration:line-through; color:var(--ink-soft); }
+
+  .actions-row{ padding:20px 26px 26px; display:flex; gap:10px; flex-wrap:wrap; border-top:1px solid var(--line); background:var(--paper); }
+  .action-btn{ padding:11px 18px; font-size:0.82rem; font-weight:600; border-radius:var(--radius); border:1px solid var(--line); background:var(--white); }
+  .action-btn.primary{ background:var(--amber); border:none; box-shadow:2px 2px 0 var(--ink); }
+  .action-btn.primary:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--ink); }
+
+  @media (max-width:720px){
+    .app{ grid-template-columns:1fr; }
+    aside{ flex-direction:row; align-items:center; padding:16px 18px; gap:20px; overflow-x:auto; }
+    aside nav{ flex-direction:row; gap:4px; } .sidebar-foot{ display:none; }
+    main{ padding:22px 18px 50px; }
+    .info-grid{ grid-template-columns:1fr; }
+    .stepper .label{ font-size:0.58rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside>
+    <div class="brand">Demanda<span>rápida</span></div>
+    <nav>
+      <a class="nav-item active" href="detalhe-demandas-do-cliente.html"><span class="nav-icon">▤</span> Demandas</a>
+      <a class="nav-item" href="demandas.html"><span class="nav-icon">✉</span> Demandas próximas</a>
+      <a class="nav-item" href="perfil-publico.html"><span class="nav-icon">◎</span> Meu perfil público</a>
+      <a class="nav-item" href="planos.html"><span class="nav-icon">⚑</span> Plano</a>
+    </nav>
+    <div class="sidebar-foot">João Marcos<br>Elétrica residencial<div class="plan-tag">plano ativo</div></div>
+  </aside>
+
+  <main>
+    <a class="back-link" href="demandas.html">← voltar às Demandas</a>
+
+    <div class="slip">
+      <div class="slip-head">
+        <span class="id">Demanda · #1088</span>
+        <div class="badges">
+          <span class="badge external">🟡 Origem: externa</span>
+          <span class="badge pending">Confirmação pendente</span>
+        </div>
+      </div>
+
+      <div class="slip-title">
+        <h1>Instalação elétrica — cômodo extra</h1>
+        <div class="slip-meta">
+          <span>Maria Oliveira · Águas Claras</span>
+          <span>criada em 26/08</span>
+        </div>
+      </div>
+
+      <div class="stepper">
+        <div class="step done"><div class="dot"></div><div class="label">Criada</div></div>
+        <div class="step current"><div class="dot"></div><div class="label">Aguardando<br>confirmação</div></div>
+        <div class="step"><div class="dot"></div><div class="label">Em<br>andamento</div></div>
+        <div class="step"><div class="dot"></div><div class="label">Concluída</div></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="info-grid">
+        <div class="info-item"><div class="k">Cliente</div><div class="v">Maria Oliveira</div></div>
+        <div class="info-item"><div class="k">Telefone</div><div class="v">(61) 99999-9999</div></div>
+        <div class="info-item"><div class="k">Local</div><div class="v">Águas Claras, Brasília</div></div>
+        <div class="info-item"><div class="k">Valor combinado</div><div class="v">R$ 250</div></div>
+      </div>
+
+      <div class="block">
+        <div class="block-label">Checklist de materiais</div>
+        <div class="checklist">
+          <label class="check-item done"><input type="checkbox" checked><span>Fiação (rolo 2,5mm)</span></label>
+          <label class="check-item done"><input type="checkbox" checked><span>Disjuntor 20A</span></label>
+          <label class="check-item"><input type="checkbox"><span>Tomadas duplas (x3)</span></label>
+          <label class="check-item"><input type="checkbox"><span>Caixa de passagem</span></label>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="action-btn">Reenviar link de confirmação</button>
+        <button class="action-btn">Gerar PDF</button>
+        <button class="action-btn primary">Marcar em andamento →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

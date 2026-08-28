@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolha seu perfil · Demanda Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#F1ECDE; --ink:#1B2427; --ink-soft:#4B5559; --amber:#F0A202; --teal:#12525A; --line:#D3C9AC; --white:#FBF9F3; --radius:2px; --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace; }
+  *{ box-sizing:border-box; } body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.04) 1px, transparent 1px); background-size:4px 4px; pointer-events:none; }
+  .wrap{ max-width:600px; margin:0 auto; padding:40px 24px; text-align:center; }
+  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.5rem; margin-bottom:8px; }
+  .brand span{ color:var(--amber); }
+  .subtitle{ color:var(--ink-soft); margin-bottom:40px; font-size:0.95rem; }
+  
+  .choice-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .choice-card{
+    background:var(--white); border:2px solid var(--line); border-radius:var(--radius);
+    padding:32px 20px; text-decoration:none; color:var(--ink);
+    transition:all 0.2s ease; box-shadow:4px 4px 0 var(--line);
+  }
+  .choice-card:hover{ transform:translate(-2px, -2px); box-shadow:6px 6px 0 var(--ink); border-color:var(--ink); }
+  .choice-card .icon{ font-size:2.5rem; margin-bottom:16px; display:block; }
+  .choice-card h3{ font-family:var(--font-display); font-size:1.1rem; margin:0 0 8px; }
+  .choice-card p{ font-size:0.8rem; color:var(--ink-soft); margin:0; line-height:1.4; }
+  
+  .back-link{ display:inline-block; margin-top:40px; color:var(--ink-soft); font-family:var(--font-mono); font-size:0.8rem; text-decoration:none; }
+  .back-link:hover{ color:var(--teal); }
+  @media(max-width:500px){ .choice-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Demanda<span>rápida</span></div>
+  <p class="subtitle">Como você vai usar a plataforma?</p>
+
+  <div class="choice-grid">
+    <a href="cadastro-cliente.html" class="choice-card">
+      <span class="icon">🧑</span>
+      <h3>Sou Cliente</h3>
+      <p>Preciso de um serviço. Quero publicar uma demanda e receber propostas de profissionais.</p>
+    </a>
+    <a href="cadastro-prestador.html" class="choice-card">
+      <span class="icon">🛠️</span>
+      <h3>Sou Prestador</h3>
+      <p>Ofereço serviços. Quero ver demandas na minha região e enviar orçamentos.</p>
+    </a>
+  </div>
+
+  <a href="index.html" class="back-link">← Voltar para o login</a>
+</div>
+</body>
+</html>

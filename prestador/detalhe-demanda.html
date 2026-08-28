@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enviar Proposta · Demanda Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#F1ECDE; --ink:#1B2427; --ink-soft:#4B5559; --amber:#F0A202; --teal:#12525A; --line:#D3C9AC; --white:#FBF9F3; --radius:2px; --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace; }
+  *{ box-sizing:border-box; } body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.04) 1px, transparent 1px); background-size:4px 4px; pointer-events:none; }
+  
+  .wrap{ max-width:600px; margin:0 auto; padding:24px; }
+  .back-link{ display:inline-block; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); text-decoration:none; margin-bottom:20px; }
+  
+  /* Card de Leitura da Demanda */
+  .demand-read-only{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px; margin-bottom:32px; box-shadow:3px 3px 0 var(--line);
+  }
+  .demand-read-only h2{ font-family:var(--font-display); margin-top:0; font-size:1.3rem; }
+  .meta-row{ display:flex; gap:16px; margin-bottom:16px; }
+  .meta-tag{ font-family:var(--font-mono); font-size:0.7rem; background:var(--paper); padding:4px 8px; border-radius:var(--radius); color:var(--teal); }
+  .demand-body{ font-size:0.9rem; line-height:1.6; color:var(--ink-soft); border-top:1px dashed var(--line); padding-top:16px; }
+
+  /* Formulário de Proposta */
+  .proposal-form{
+    background:var(--ink); color:var(--paper); border-radius:var(--radius); padding:24px;
+    box-shadow:4px 4px 0 var(--amber);
+  }
+  .proposal-form h3{ font-family:var(--font-display); margin-top:0; color:var(--amber); }
+  .proposal-form label{ color:var(--line); font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; }
+  .proposal-form input, .proposal-form textarea{
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:var(--paper);
+    padding:12px; border-radius:var(--radius); font-family:var(--font-body); margin-bottom:16px; outline:none;
+  }
+  .proposal-form input:focus, .proposal-form textarea:focus{ border-color:var(--amber); background:rgba(255,255,255,0.1); }
+  
+  .row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  
+  .btn-submit{
+    width:100%; background:var(--amber); color:var(--ink); border:none; padding:14px;
+    font-family:var(--font-display); font-weight:700; font-size:1rem; border-radius:var(--radius);
+    cursor:pointer; box-shadow:3px 3px 0 var(--paper); transition:0.1s;
+  }
+  .btn-submit:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--paper); }
+  
+  @media(max-width:500px){ .row{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a href="demandas.html" class="back-link">← Voltar para o marketplace</a>
+
+  <!-- O que o cliente pediu -->
+  <div class="demand-read-only">
+    <div class="meta-row">
+      <span class="meta-tag">Elétrica</span>
+      <span class="meta-tag">Águas Claras</span>
+    </div>
+    <h2>Instalação de chuveiro e troca de tomada</h2>
+    <div class="demand-body">
+      Preciso instalar um chuveiro elétrico novo (4400w) e trocar uma tomada que está derretendo no banheiro. O quadro de luz já está preparado. Tenho disponibilidade a partir de quinta-feira.
+    </div>
+  </div>
+
+  <!-- Formulário de Proposta do Prestador -->
+  <form class="proposal-form" id="propostaForm">
+    <h3>Enviar sua proposta</h3>
+    <p style="font-size:0.8rem; color:var(--line); margin-top:-12px; margin-bottom:20px;">O cliente poderá comparar sua proposta com a de outros profissionais.</p>
+    
+    <div class="row">
+      <div>
+        <label for="valor">Valor Total (R$)</label>
+        <input type="number" id="valor" placeholder="150,00" step="0.01" required>
+      </div>
+      <div>
+        <label for="prazo">Prazo de execução</label>
+        <input type="text" id="prazo" placeholder="Ex: 2 horas" required>
+      </div>
+    </div>
+
+    <label for="mensagem">Mensagem para o cliente</label>
+    <textarea id="mensagem" rows="4" placeholder="Olá! Tenho experiência com esse tipo de instalação. Posso ir aí na quinta às 14h..." required></textarea>
+
+    <button type="submit" class="btn-submit">Enviar Proposta ao Cliente</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('propostaForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Lógica Supabase: insert em 'proposals' com status 'pendente'
+    alert('Proposta enviada com sucesso! Você será notificado quando o cliente responder.');
+    window.location.href = 'demandas.html';
+  });
+</script>
+</body>
+</html>

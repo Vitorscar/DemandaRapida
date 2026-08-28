@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>João Marcos — Elétrica Residencial · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--paper); color:var(--ink); font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased; position:relative;
+  }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; }
+  img{ max-width:100%; display:block; }
+
+  /* Textura de fundo */
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px);
+    background-size:3px 3px; pointer-events:none; z-index:0;
+  }
+
+  .wrap{ max-width:800px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1; }
+
+  /* ---------- TOP BAR ---------- */
+  .sitebar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 24px; max-width:800px; margin:0 auto;
+    font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft);
+    position:relative; z-index:1;
+  }
+  .sitebar .brand{ font-family:var(--font-display); font-weight:700; color:var(--ink); font-size:0.95rem; }
+  .sitebar .brand span{ color:var(--amber); }
+  .sitebar a.back{ border:1px solid var(--line); padding:6px 12px; border-radius:100px; transition:0.15s; }
+  .sitebar a.back:hover{ background:var(--white); color:var(--ink); }
+
+  /* ---------- HERO SECTION ---------- */
+  .hero{
+    display:flex; gap:28px; align-items:flex-start; padding:12px 0 32px;
+    border-bottom:1px solid var(--line); flex-wrap:wrap;
+  }
+  .avatar{
+    width:110px; height:110px; border-radius:50%;
+    background:var(--teal) url('https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=200&h=200&fit=crop') center/cover;
+    border:3px solid var(--white); box-shadow:0 0 0 1px var(--line);
+    flex-shrink:0;
+  }
+  .hero-info{ flex:1; min-width:240px; }
+  .hero-info h1{
+    font-family:var(--font-display); font-size:1.8rem; font-weight:700;
+    margin:0 0 6px; letter-spacing:-0.01em;
+  }
+  .hero-loc{ font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+  .hero-loc .pin{ color:var(--amber-deep); }
+
+  .rating{ display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:0.85rem; margin-bottom:16px; }
+  .stars{ color:var(--amber-deep); letter-spacing:1px; }
+  .rating .count{ color:var(--ink-soft); }
+
+  .tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .service-tag{
+    font-family:var(--font-mono); font-size:0.72rem; font-weight:500;
+    background:var(--white); border:1px solid var(--line);
+    padding:5px 12px 5px 16px; border-radius:0 100px 100px 0;
+    position:relative; color:var(--ink-soft);
+  }
+  .service-tag::before{
+    content:""; position:absolute; left:6px; top:50%;
+    width:4px; height:4px; background:var(--teal);
+    border-radius:50%; transform:translateY(-50%);
+  }
+
+  .cta-col{ display:flex; flex-direction:column; gap:10px; margin-left:auto; min-width:200px; }
+  .cta-btn{
+    background:var(--amber); color:var(--ink); border:none;
+    padding:14px 22px; font-weight:600; font-size:0.9rem;
+    border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink);
+    white-space:nowrap; transition:transform 0.1s ease, box-shadow 0.1s ease;
+    text-align:center;
+  }
+  .cta-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .cta-btn.secondary{
+    background:var(--white); color:var(--ink); border:1px solid var(--line);
+    box-shadow:2px 2px 0 var(--line); font-size:0.82rem; padding:10px 22px;
+  }
+  .cta-btn.secondary:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--line); }
+  .cta-sub{ font-size:0.7rem; color:var(--ink-soft); text-align:center; font-family:var(--font-mono); margin-top:-4px; }
+
+  /* ---------- SECTIONS ---------- */
+  .section{ padding:34px 0; border-bottom:1px solid var(--line); }
+  .section:last-of-type{ border-bottom:none; }
+  
+  .section-label{
+    font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--teal); margin-bottom:18px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .section-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+  
+  .bio{ font-size:0.95rem; line-height:1.65; color:var(--ink); max-width:60ch; margin:0; }
+
+  /* ---------- PORTFOLIO (Polaroid Style) ---------- */
+  .portfolio-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+    gap:24px 20px; padding-top:8px;
+  }
+  .polaroid{
+    background:var(--white); padding:8px 8px 14px;
+    border:1px solid var(--line); box-shadow:2px 3px 6px rgba(27,36,39,0.08);
+    transition:transform 0.2s ease, box-shadow 0.2s ease; cursor:pointer;
+  }
+  .polaroid:nth-child(odd){ transform:rotate(-1.5deg); }
+  .polaroid:nth-child(even){ transform:rotate(1.5deg); }
+  .polaroid:hover{ transform:rotate(0deg) scale(1.04); z-index:2; box-shadow:4px 6px 12px rgba(27,36,39,0.12); }
+  .polaroid img{ width:100%; aspect-ratio:1/1; object-fit:cover; background:var(--paper-deep); }
+  .polaroid .cap{
+    font-family:var(--font-mono); font-size:0.65rem; color:var(--ink-soft);
+    text-align:center; margin-top:10px;
+  }
+
+  /* ---------- REVIEWS ---------- */
+  .review{
+    padding:20px 0; border-top:1px dashed var(--line);
+    display:grid; grid-template-columns:40px 1fr; gap:14px;
+  }
+  .review:first-child{ border-top:none; }
+  .review-avatar{
+    width:40px; height:40px; border-radius:50%; background:var(--paper-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:600; font-size:0.85rem;
+    color:var(--teal); border:1px solid var(--line);
+  }
+  .review-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px; flex-wrap:wrap; gap:6px; }
+  .review-name{ font-weight:600; font-size:0.9rem; }
+  .review-stars{ color:var(--amber-deep); font-size:0.8rem; font-family:var(--font-mono); letter-spacing:1px; }
+  .review-date{ font-size:0.7rem; color:var(--ink-soft); font-family:var(--font-mono); margin-bottom:6px; }
+  .review-text{ font-size:0.88rem; color:var(--ink); line-height:1.55; margin:0 0 8px; }
+  .review-service{
+    display:inline-block; font-family:var(--font-mono); font-size:0.65rem;
+    color:var(--teal-soft); background:rgba(62,124,107,0.1);
+    padding:3px 10px; border-radius:100px;
+  }
+
+  footer{
+    text-align:center; padding:40px 0 10px;
+    font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-soft);
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 720px){
+    .hero{ flex-direction:column; align-items:center; text-align:center; gap:20px; }
+    .hero-loc{ justify-content:center; }
+    .rating{ justify-content:center; }
+    .tags{ justify-content:center; }
+    .cta-col{ margin-left:0; width:100%; }
+    .portfolio-grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+  @media (max-width: 480px){
+    .portfolio-grid{ grid-template-columns:1fr; }
+    .polaroid:nth-child(odd), .polaroid:nth-child(even){ transform:rotate(0deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="sitebar">
+  <div class="brand">Demanda<span>rápida</span> · diretório</div>
+  <a class="back" href="diretorio.html">← voltar à busca</a>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO: Perfil e Ações -->
+  <div class="hero">
+    <div class="avatar"></div>
+    <div class="hero-info">
+      <h1>João Marcos</h1>
+      <div class="hero-loc"><span class="pin">◎</span> Asa Norte, Brasília · atende toda a região</div>
+      <div class="rating">
+        <span class="stars">★★★★★</span>
+        <span>4.9</span>
+        <span class="count">· 62 avaliações · 214 serviços</span>
+      </div>
+      <div class="tags">
+        <span class="service-tag">Elétrica Residencial</span>
+        <span class="service-tag">Quadros e Disjuntores</span>
+        <span class="service-tag">Instalações Prediais</span>
+      </div>
+    </div>
+    <div class="cta-col">
+      <button class="cta-btn" onclick="solicitarOrcamento()">Solicitar Orçamento Grátis</button>
+      <button class="cta-btn secondary" onclick="publicarDemanda()">Publicar Demanda</button>
+      <span class="cta-sub">resposta média em ~2h</span>
+    </div>
+  </div>
+
+  <!-- SOBRE -->
+  <div class="section">
+    <div class="section-label">Sobre o Profissional</div>
+    <p class="bio">
+      Eletricista há 11 anos, atendendo Asa Norte, Asa Sul e Taguatinga. Trabalho com instalação, 
+      manutenção e revisão de quadros elétricos residenciais e prediais. 
+      Sempre com orçamento fechado antes de começar, materiais de primeira linha e nota do serviço ao final.
+    </p>
+  </div>
+
+  <!-- PORTFÓLIO -->
+  <div class="section">
+    <div class="section-label">Trabalhos Recentes</div>
+    <div class="portfolio-grid">
+      <figure class="polaroid">
+        <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=300&h=300&fit=crop" alt="Quadro elétrico">
+        <div class="cap">Quadro · Sudoeste</div>
+      </figure>
+      <figure class="polaroid">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop" alt="Fiação">
+        <div class="cap">Fiação · Taguatinga</div>
+      </figure>
+      <figure class="polaroid">
+        <img src="https://images.unsplash.com/photo-1621905252472-e8de6f14b127?w=300&h=300&fit=crop" alt="Chuveiro">
+        <div class="cap">Chuveiro · Asa Norte</div>
+      </figure>
+      <figure class="polaroid">
+        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300&h=300&fit=crop" alt="Manutenção">
+        <div class="cap">Predial · Bela Vista</div>
+      </figure>
+    </div>
+  </div>
+
+  <!-- AVALIAÇÕES -->
+  <div class="section">
+    <div class="section-label">Avaliações dos Clientes · 62</div>
+
+    <div class="review">
+      <div class="review-avatar">RS</div>
+      <div>
+        <div class="review-head">
+          <span class="review-name">Renata Souza</span>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <div class="review-date">há 3 dias</div>
+        <p class="review-text">Chegou no horário, trocou o disjuntor rápido e deixou tudo explicado. Muito educado e profissional. Recomendo!</p>
+        <span class="review-service">troca de disjuntor</span>
+      </div>
+    </div>
+
+    <div class="review">
+      <div class="review-avatar">ML</div>
+      <div>
+        <div class="review-head">
+          <span class="review-name">Marcos Lima</span>
+          <span class="review-stars">★★★★★</span>
+        </div>
+        <div class="review-date">há 2 semanas</div>
+        <p class="review-text">Instalou o chuveiro certinho e ainda revisou o resto do quadro sem custo extra. Muito atencioso e limpo.</p>
+        <span class="review-service">instalação de chuveiro</span>
+      </div>
+    </div>
+
+    <div class="review">
+      <div class="review-avatar">BN</div>
+      <div>
+        <div class="review-head">
+          <span class="review-name">Beatriz Nunes</span>
+          <span class="review-stars">★★★★☆</span>
+        </div>
+        <div class="review-date">há 1 mês</div>
+        <p class="review-text">Bom serviço, resolveu um problema complexo. Só demorou um pouco mais que o combinado, mas o resultado ficou perfeito.</p>
+        <span class="review-service">revisão de fiação</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    perfil verificado · membro desde 2024 · OS Rápida
+  </footer>
+
+</div>
+
+<script>
+  // Fluxo de Marketplace: Redireciona para o cliente criar demanda
+  function solicitarOrcamento(){
+    const prestadorNome = "João Marcos";
+    // Supondo que este arquivo esteja na pasta 'publico/', o caminho relativo é '../cliente/...'
+    const url = `cliente/nova-demanda.html?prestador=${encodeURIComponent(prestadorNome)}`;
+    window.location.href = url;
+  }
+
+  function publicarDemanda(){
+    window.location.href = "../cliente/nova-demanda.html";
+  }
+
+  // Exemplo de como carregar dados dinamicamente no futuro:
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const providerId = urlParams.get('id');
+  // if(providerId) fetchProviderData(providerId);
+</script>
+
+</body>
+</html>

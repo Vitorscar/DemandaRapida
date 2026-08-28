@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmar serviço · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; height:100%; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+        display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; }
+
+  .card{
+    position:relative; z-index:1; width:100%; max-width:420px;
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:5px 5px 0 var(--line);
+    overflow:hidden;
+  }
+  .card-head{ background:var(--ink); color:var(--paper); padding:18px 26px; text-align:center; }
+  .card-head .brand{ font-family:var(--font-display); font-weight:700; font-size:1rem; display:inline-flex; gap:6px; align-items:baseline; }
+  .card-head .brand span{ color:var(--amber); font-family:var(--font-mono); font-size:0.68rem; border:1px solid var(--amber); padding:2px 5px; border-radius:var(--radius); }
+
+  .card-body{ padding:30px 28px 26px; text-align:center; }
+  .eyebrow{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--teal); margin-bottom:10px; }
+  h1{ font-family:var(--font-display); font-size:1.4rem; font-weight:700; margin:0 0 6px; }
+  .greeting{ font-size:0.9rem; color:var(--ink-soft); margin-bottom:22px; }
+
+  .detail-slip{ text-align:left; border:1px dashed var(--line); border-radius:var(--radius); padding:16px 18px; margin-bottom:22px; }
+  .detail-row{ display:flex; justify-content:space-between; padding:7px 0; font-size:0.85rem; border-bottom:1px solid var(--paper-deep); }
+  .detail-row:last-child{ border-bottom:none; }
+  .detail-row .k{ color:var(--ink-soft); }
+  .detail-row .v{ font-weight:600; text-align:right; }
+
+  .provider-strip{ display:flex; align-items:center; gap:10px; text-align:left; margin-bottom:24px; padding:12px 14px; background:var(--paper); border-radius:var(--radius); }
+  .provider-avatar{ width:36px; height:36px; border-radius:50%; background:var(--teal); flex-shrink:0; }
+  .provider-info .name{ font-weight:600; font-size:0.85rem; }
+  .provider-info .rating{ font-size:0.72rem; color:var(--amber-deep); font-family:var(--font-mono); }
+
+  .confirm-btn{
+    width:100%; background:var(--amber); color:var(--ink); border:none; padding:15px;
+    font-weight:700; font-size:0.92rem; border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink);
+    transition:transform 0.1s ease, box-shadow 0.1s ease; margin-bottom:12px;
+  }
+  .confirm-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .decline-link{ display:block; font-size:0.78rem; color:var(--ink-soft); font-family:var(--font-mono); }
+
+  .why-note{ margin-top:24px; font-size:0.72rem; color:var(--ink-soft); line-height:1.5; text-align:left; border-top:1px solid var(--line); padding-top:16px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="card-head">
+    <div class="brand">Demanda<span>rápida</span></div>
+  </div>
+
+  <div class="card-body">
+    <div class="eyebrow">Confirmação de serviço</div>
+    <h1>Olá, Maria!</h1>
+    <div class="greeting">Carlos criou uma ordem de serviço para você. Confirme se está tudo certo.</div>
+
+    <div class="detail-slip">
+      <div class="detail-row"><span class="k">Serviço</span><span class="v">Instalação elétrica</span></div>
+      <div class="detail-row"><span class="k">Local</span><span class="v">Águas Claras</span></div>
+      <div class="detail-row"><span class="k">Data prevista</span><span class="v">28/08/2026</span></div>
+      <div class="detail-row"><span class="k">Valor</span><span class="v">R$ 250</span></div>
+    </div>
+
+    <div class="provider-strip">
+      <div class="provider-avatar"></div>
+      <div class="provider-info">
+        <div class="name">Carlos Elétrica</div>
+        <div class="rating">★★★★★ 4.9 · 127 serviços</div>
+      </div>
+    </div>
+
+    <button class="confirm-btn">✓ Confirmar serviço</button>
+    <a class="decline-link" href="#">não reconheço esse serviço</a>
+
+    <div class="why-note">Ao confirmar, esse serviço passa a contar como <b>verificado</b> no perfil do prestador, e você poderá avaliar o atendimento quando o serviço for concluído.</div>
+  </div>
+</div>
+
+</body>
+</html>

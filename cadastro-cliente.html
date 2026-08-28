@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criar conta de Cliente · Demanda Rápida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDE; --paper-deep:#E8E1CE; --ink:#1B2427; --ink-soft:#4B5559;
+    --amber:#F0A202; --amber-deep:#C67F00; --teal:#12525A; --teal-soft:#3E7C6B;
+    --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
+    --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; }
+
+  .sitebar{ display:flex; justify-content:space-between; align-items:center; padding:18px 24px; max-width:520px; margin:0 auto; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); }
+  .sitebar .brand{ font-family:var(--font-display); font-weight:700; color:var(--ink); font-size:0.95rem; }
+  .sitebar .brand span{ color:var(--amber); }
+  .sitebar a.back{ border:1px solid var(--line); padding:6px 12px; border-radius:100px; }
+
+  .wrap{ max-width:520px; margin:0 auto; padding:12px 24px 80px; }
+  .intro{ padding:10px 0 24px; text-align:center; }
+  .intro h1{ font-family:var(--font-display); font-size:1.7rem; font-weight:700; letter-spacing:-0.01em; margin:0 0 6px; }
+  .intro p{ font-size:0.88rem; color:var(--ink-soft); }
+
+  /* account type toggle */
+  .type-toggle{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px; }
+  .type-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 16px; text-align:center; cursor:pointer; transition:border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .type-card .icon{ font-size:1.5rem; margin-bottom:8px; }
+  .type-card .name{ font-family:var(--font-display); font-weight:600; font-size:0.95rem; }
+  .type-card .desc{ font-size:0.72rem; color:var(--ink-soft); margin-top:4px; line-height:1.4; }
+  .type-card.selected{ border-color:var(--ink); box-shadow:3px 3px 0 var(--line); }
+  .type-card.selected .icon{ filter:none; }
+  .type-card.selected .name{ color:var(--teal); }
+
+  form{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:4px 4px 0 var(--line); }
+  .slip-head{ background:var(--ink); color:var(--paper); padding:14px 22px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:0.72rem; }
+  .slip-head .status{ color:var(--amber); }
+
+  .field-group{ padding:24px 24px 6px; }
+  .field{ margin-bottom:18px; }
+  label{ display:block; font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:8px; }
+  input, select{
+    width:100%; font-family:var(--font-body); font-size:0.92rem; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 14px; outline:none; transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  input:focus, select:focus{ border-color:var(--teal); background:var(--white); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .client-only{ border-top:1px dashed var(--line); margin-top:6px; padding-top:20px; }
+  .section-note{ font-family:var(--font-mono); font-size:0.68rem; color:var(--teal); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px; }
+
+  .submit-row{ padding:18px 24px 26px; }
+  .create-btn{
+    width:100%; background:var(--amber); color:var(--ink); border:none; padding:14px;
+    font-weight:600; font-size:0.9rem; border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink);
+    transition:transform 0.1s ease, box-shadow 0.1s ease;
+  }
+  .create-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .terms{ font-size:0.72rem; color:var(--ink-soft); text-align:center; margin-top:14px; font-family:var(--font-mono); }
+
+  .login-note{ text-align:center; font-size:0.85rem; color:var(--ink-soft); margin-top:22px; }
+  .login-note a{ color:var(--teal); font-weight:600; }
+
+  @media (max-width:480px){ .field-row{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="sitebar">
+  <div class="brand">Demanda<span>rápida</span></div>
+  <a class="back" href="index.html">já tenho conta →</a>
+</div>
+
+<div class="wrap">
+  <div class="intro">
+    <h1>Criar sua conta</h1>
+    <p>Precisa de um serviço ou presta serviços? Escolha abaixo.</p>
+  </div>
+
+  <div class="type-toggle">
+    <!-- Cliente selecionado por padrão nesta tela -->
+    <div class="type-card selected">
+      <div class="icon">🧑</div>
+      <div class="name">Sou cliente</div>
+      <div class="desc">Quero publicar demandas e contratar prestadores</div>
+    </div>
+    <div class="type-card">
+      <div class="icon">🛠️</div>
+      <div class="name">Sou prestador</div>
+      <div class="desc">Quero receber demandas e gerenciar minhas OS</div>
+    </div>
+  </div>
+
+  <form id="cadastroClienteForm">
+    <div class="slip-head">
+      <span>CADASTRO · CLIENTE</span>
+      <span class="status">100% gratuito</span>
+    </div>
+
+    <div class="field-group">
+      <div class="field">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Ex: João Souza" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="whatsapp">WhatsApp</label>
+          <input type="tel" id="whatsapp" name="whatsapp" placeholder="(61) 90000-0000" required>
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="voce@email.com" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="senha">Criar senha</label>
+        <input type="password" id="senha" name="senha" placeholder="mínimo 8 caracteres" required>
+      </div>
+    </div>
+
+    <!-- Seção específica para Cliente -->
+   <!-- Seção específica para Cliente -->
+<div class="field-group client-only">
+  <div class="section-note">Sua localização</div>
+
+  <p style="font-size:0.78rem; color:var(--ink-soft); margin:-8px 0 18px; line-height:1.4;">
+    Isso nos ajuda a mostrar prestadores próximos a você e preencher automaticamente suas futuras demandas.
+  </p>
+
+  <!-- CEP -->
+  <div class="field">
+    <label for="cep">CEP</label>
+    <input
+      type="text"
+      id="cep"
+      name="cep"
+      placeholder="Ex: 71900-000"
+      maxlength="9"
+      inputmode="numeric"
+      autocomplete="postal-code"
+      required
+    >
+    <small id="cep-status" style="display:block; margin-top:6px; font-size:0.75rem;"></small>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="cidade">Cidade</label>
+      <input
+        type="text"
+        id="cidade"
+        name="cidade"
+        placeholder="Ex: Brasília"
+        autocomplete="address-level2"
+        required
+      >
+    </div>
+
+    <div class="field">
+      <label for="bairro">Bairro principal</label>
+      <input
+        type="text"
+        id="bairro"
+        name="bairro"
+        placeholder="Ex: Águas Claras"
+        autocomplete="address-level3"
+        required
+      >
+    </div>
+  </div>
+</div>
+
+    <div class="submit-row">
+      <button type="submit" class="create-btn">Criar conta e publicar demanda →</button>
+      <div class="terms">ao continuar, você concorda com os termos do OS Rápida</div>
+    </div>
+  </form>
+
+  <div class="login-note">Já tem conta? <a href="index.html">Entrar</a></div>
+</div>
+
+<script>
+  // Script simples para alternar visualmente os cards (opcional, caso o usuário clique no outro)
+  document.querySelectorAll('.type-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      
+      // Redireciona se clicar no prestador
+      if(card.querySelector('.name').textContent.includes('prestador')) {
+        window.location.href = 'cadastro-prestador.html';
+      }
+    });
+  });
+
+  // Exemplo de interceptação do submit
+  document.getElementById('cadastroClienteForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Aqui entraria a lógica de cadastro no Supabase
+    alert('Cadastro de cliente iniciado! (Integrar com Supabase Auth)');
+  });
+</script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+   // Função para buscar endereço pelo CEP
+  async function buscarEnderecoPorCep(cep) {
+    const cepLimpo = cep.replace(/\D/g, '');
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://viacep.com.br/ws/${cepLimpo}/json/`
+      );
+
+      if (!response.ok) {
+        throw new Error('Erro na resposta do ViaCEP');
+      }
+
+      const data = await response.json();
+
+      if (data.erro) {
+        alert('CEP não encontrado!');
+        return;
+      }
+
+      // Preenche os campos automaticamente
+      const logradouro = document.getElementById('logradouro');
+      const bairro = document.getElementById('bairro');
+      const cidade = document.getElementById('cidade');
+      const uf = document.getElementById('uf');
+
+      if (logradouro) logradouro.value = data.logradouro || '';
+      if (bairro) bairro.value = data.bairro || '';
+      if (cidade) cidade.value = data.localidade || '';
+      if (uf) uf.value = data.uf || '';
+
+      // Adiciona indicação visual de sucesso
+      const cepInput = document.getElementById('cep');
+
+      if (cepInput) {
+        cepInput.style.borderColor = '#28a745';
+      }
+
+      // Foca no próximo campo, se existir
+      const numeroInput = document.getElementById('numero');
+
+      if (numeroInput) {
+        setTimeout(() => {
+          numeroInput.focus();
+        }, 300);
+      }
+
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+      alert('Erro ao buscar o CEP. Tente novamente.');
+    }
+  }
+
+  // Máscara para o CEP
+  function aplicarMascaraCEP(cep) {
+    cep = cep.replace(/\D/g, '');
+    cep = cep.replace(/^(\d{5})(\d)/, '$1-$2');
+
+    return cep;
+  }
+
+  // Campo CEP
+  const cepInput = document.getElementById('cep');
+
+  if (cepInput) {
+
+    cepInput.addEventListener('input', function () {
+      this.value = aplicarMascaraCEP(this.value);
+    });
+
+    cepInput.addEventListener('blur', function () {
+      buscarEnderecoPorCep(this.value);
+    });
+  }
+  // Formatar WhatsApp
+  function formatarWhatsApp(value) {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 3)} ${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 3)} ${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+  }
+
+  // Event listeners para formatação
+  document.addEventListener('DOMContentLoaded', () => {
+    // Formatar CEP ao digitar
+    const cepInput = document.getElementById('cep');
+    if (cepInput) {
+      cepInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        e.target.value = aplicarMascaraCEP(value);
+        
+        // Se tiver 9 caracteres (incluindo o hífen), busca o endereço
+        if (e.target.value.replace(/\D/g, '').length === 8) {
+          buscarEnderecoPorCep(e.target.value);
+        }
+      });
+
+      // Buscar ao perder o foco
+      cepInput.addEventListener('blur', (e) => {
+        const cepLimpo = e.target.value.replace(/\D/g, '');
+        if (cepLimpo.length === 8) {
+          buscarEnderecoPorCep(e.target.value);
+        }
+      });
+    }
+
+    // Formatar WhatsApp
+    const whatsappInput = document.getElementById('whatsapp');
+    if (whatsappInput) {
+      whatsappInput.addEventListener('input', (e) => {
+        const cursorPosition = e.target.selectionStart;
+        const formatted = formatarWhatsApp(e.target.value);
+        e.target.value = formatted;
+        // Ajusta a posição do cursor
+        if (cursorPosition < formatted.length) {
+          e.target.setSelectionRange(cursorPosition, cursorPosition);
+        }
+      });
+    }
+  });
+
+  // Submissão do formulário
+  document.getElementById('cadastroClienteForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+    
+    const dados = {
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('whatsapp').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      password: document.getElementById('senha').value,
+      cidade: document.getElementById('cidade').value.trim(),
+      bairro: document.getElementById('bairro').value.trim(),
+      cep: cep || null,
+      logradouro: document.getElementById('logradouro').value.trim() || null,
+      numero: document.getElementById('numero').value.trim() || null,
+      complemento: document.getElementById('complemento').value.trim() || null,
+      uf: document.getElementById('uf').value.trim() || null,
+      tipo: 'cliente'
+    };
+    
+    const btn = e.target.querySelector('.create-btn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Criando conta...';
+    btn.disabled = true;
+    
+    const result = await Auth.register(dados);
+    
+    if (result.success) {
+      // Redireciona para o dashboard do cliente
+      window.location.href = 'cliente/dashboard-cliente.html';
+    } else {
+      alert('Erro: ' + result.error);
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

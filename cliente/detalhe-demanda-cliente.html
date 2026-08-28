@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propostas Recebidas · Demanda Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --paper:#F1ECDE; --ink:#1B2427; --ink-soft:#4B5559; --amber:#F0A202; --teal:#12525A; --line:#D3C9AC; --white:#FBF9F3; --radius:2px; --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace; }
+  *{ box-sizing:border-box; } body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.04) 1px, transparent 1px); background-size:4px 4px; pointer-events:none; }
+  
+  .wrap{ max-width:700px; margin:0 auto; padding:24px; }
+  .back-link{ display:inline-block; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); text-decoration:none; margin-bottom:20px; }
+  
+  .demand-summary{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; margin-bottom:32px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .demand-summary h2{ font-family:var(--font-display); margin:0; font-size:1.2rem; }
+  .status-badge{ background:var(--amber); color:var(--ink); font-family:var(--font-mono); font-size:0.7rem; padding:6px 12px; border-radius:100px; font-weight:600; }
+
+  .section-title{ font-family:var(--font-display); font-size:1.1rem; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+  .count{ background:var(--ink); color:var(--paper); font-size:0.75rem; padding:2px 8px; border-radius:100px; font-family:var(--font-mono); }
+
+  .proposal-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; margin-bottom:16px; box-shadow:3px 3px 0 var(--line); position:relative;
+  }
+  .proposal-card.recommended{ border-color:var(--teal); box-shadow:3px 3px 0 var(--teal); }
+  .recommended-tag{ position:absolute; top:-10px; right:16px; background:var(--teal); color:var(--white); font-family:var(--font-mono); font-size:0.65rem; padding:4px 10px; border-radius:100px; }
+
+  .provider-info{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .avatar{ width:40px; height:40px; background:var(--paper); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; border:1px solid var(--line); }
+  .provider-name{ font-weight:600; font-size:0.95rem; }
+  .provider-rating{ font-family:var(--font-mono); font-size:0.75rem; color:var(--amber); }
+
+  .proposal-details{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; padding:12px; background:var(--paper); border-radius:var(--radius); }
+  .detail-item label{ display:block; font-family:var(--font-mono); font-size:0.65rem; color:var(--ink-soft); text-transform:uppercase; }
+  .detail-item span{ font-family:var(--font-display); font-size:1.1rem; font-weight:600; color:var(--teal); }
+
+  .proposal-msg{ font-size:0.85rem; color:var(--ink-soft); font-style:italic; margin-bottom:20px; padding-left:12px; border-left:2px solid var(--line); }
+
+  .btn-accept{
+    width:100%; background:var(--ink); color:var(--paper); border:none; padding:12px;
+    font-family:var(--font-display); font-weight:600; font-size:0.9rem; border-radius:var(--radius);
+    cursor:pointer; transition:0.1s;
+  }
+  .btn-accept:hover{ background:var(--teal); }
+  
+  @media(max-width:500px){ .proposal-details{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a href="minhas-demandas.html" class="back-link">← Voltar para minhas demandas</a>
+
+  <div class="demand-summary">
+    <div>
+      <h2>Instalação de chuveiro e troca de tomada</h2>
+      <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft);">Águas Claras · Publicada há 2 dias</span>
+    </div>
+    <span class="status-badge">EM ANÁLISE</span>
+  </div>
+
+  <div class="section-title">
+    Propostas Recebidas <span class="count">2</span>
+  </div>
+
+  <!-- Proposta 1 -->
+  <div class="proposal-card recommended">
+    <span class="recommended-tag">⭐ MELHOR AVALIADO</span>
+    <div class="provider-info">
+      <div class="avatar">👨‍🔧</div>
+      <div>
+        <div class="provider-name">Carlos Elétrica</div>
+        <div class="provider-rating">★★★★★ (42 avaliações)</div>
+      </div>
+    </div>
+
+    <div class="proposal-details">
+      <div class="detail-item">
+        <label>Valor</label>
+        <span>R$ 120,00</span>
+      </div>
+      <div class="detail-item">
+        <label>Prazo</label>
+        <span>1 hora</span>
+      </div>
+    </div>
+
+    <p class="proposal-msg">"Olá! Consigo ir aí amanhã às 14h. Já levo a tomada nova de 20A, que é a ideal para esse chuveiro. Serviço rápido e com garantia."</p>
+
+    <button class="btn-accept" onclick="aceitarProposta('Carlos Elétrica', 120)">Aceitar Proposta e Gerar Demanda →</button>
+  </div>
+
+  <!-- Proposta 2 -->
+  <div class="proposal-card">
+    <div class="provider-info">
+      <div class="avatar">🧑‍🔧</div>
+      <div>
+        <div class="provider-name">João Reparos</div>
+        <div class="provider-rating">★★★★☆ (18 avaliações)</div>
+      </div>
+    </div>
+
+    <div class="proposal-details">
+      <div class="detail-item">
+        <label>Valor</label>
+        <span>R$ 150,00</span>
+      </div>
+      <div class="detail-item">
+        <label>Prazo</label>
+        <span>2 horas</span>
+      </div>
+    </div>
+
+    <p class="proposal-msg">"Posso fazer o serviço na quinta-feira. Valor inclui a peça e a mão de obra."</p>
+
+    <button class="btn-accept" style="background:var(--white); color:var(--ink); border:1px solid var(--line);" onclick="aceitarProposta('João Reparos', 150)">Aceitar Proposta e Gerar Demanda →</button>
+  </div>
+
+</div>
+
+<script>
+  function aceitarProposta(prestador, valor) {
+    if(confirm(`Confirmar a contratação de ${prestador} por R$ ${valor},00?\n\nIsso encerrará a demanda e criará uma Demanda oficial.`)) {
+      // Lógica Supabase:
+      // 1. Atualizar demand.status para 'aceita'
+      // 2. Atualizar proposal.status para 'aceita'
+      // 3. Criar novo registro em 'orders' (OS) vinculado a essa demand
+      alert('Proposta aceita! A Demanda foi criada.');
+      window.location.href = 'confirmar-demanda.html'; // Ou detalhe-demanda-cliente.html
+    }
+  }
+</script>
+</body>
+</html>
