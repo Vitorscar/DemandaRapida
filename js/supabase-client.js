@@ -8,8 +8,12 @@
 const SUPABASE_URL = 'https://fwzwiovycsphfrcfrjad.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Rv3ia0kJOieOeSaj4sIKXg_rLl_sk9L';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
-// Exporta para uso nos outros módulos
-window.supabaseClient = supabase;
+// Disponibiliza a instância para os outros arquivos
+window.supabaseClient = supabaseClient;
+
 console.log('✅ Supabase conectado');
