@@ -1,4 +1,4 @@
-os-rapida/
+demanda-rapida/
 │
 ├── index.html                      # login (prestador OU cliente)
 ├── cadastro.html                   # cadastro novo (escolhe tipo: cliente ou prestador)
