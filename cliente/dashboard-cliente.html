@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel do Cliente · Demanda Rápida</title>
+<title>Criar conta de Cliente · Demanda Rápida</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -13,231 +13,336 @@
     --line:#D3C9AC; --danger:#B3402F; --white:#FBF9F3; --radius:2px;
     --font-display:'Space Grotesk', sans-serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
   }
-  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; height:100%; }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
   body{ background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
   a{ color:inherit; text-decoration:none; } button{ font-family:inherit; cursor:pointer; }
-  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; z-index:0; }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(rgba(27,36,39,0.035) 1px, transparent 1px); background-size:3px 3px; pointer-events:none; }
 
-  .app{ display:grid; grid-template-columns:220px 1fr; min-height:100vh; position:relative; z-index:1; }
-  
-  /* ---------- SIDEBAR (Estilo Minhas Demandas) ---------- */
-  aside{ background:var(--ink); color:var(--paper); padding:28px 20px; display:flex; flex-direction:column; gap:36px; }
-  .brand{ font-family:var(--font-display); font-weight:700; font-size:1.15rem; display:flex; align-items:baseline; gap:6px; }
-  .brand span{ color:var(--amber); font-family:var(--font-mono); font-size:0.7rem; font-weight:600; border:1px solid var(--amber); padding:2px 5px; border-radius:var(--radius); }
-  nav{ display:flex; flex-direction:column; gap:2px; }
-  .nav-item{ display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:var(--radius); font-size:0.9rem; color:rgba(241,236,222,0.65); border-left:2px solid transparent; transition:0.15s; }
-  .nav-item:hover{ color:var(--paper); background:rgba(241,236,222,0.06); }
-  .nav-item.active{ color:var(--white); background:rgba(240,162,2,0.12); border-left:2px solid var(--amber); font-weight:500; }
-  .nav-icon{ width:16px; text-align:center; font-size:0.85rem; }
-  .sidebar-foot{ margin-top:auto; padding-top:20px; border-top:1px solid rgba(241,236,222,0.14); font-size:0.75rem; color:rgba(241,236,222,0.5); line-height:1.5; }
-  .role-tag{ display:inline-block; margin-top:8px; font-family:var(--font-mono); font-size:0.68rem; color:var(--teal-soft); border:1px dashed rgba(62,124,107,0.5); padding:3px 6px; border-radius:var(--radius); }
+  .sitebar{ display:flex; justify-content:space-between; align-items:center; padding:18px 24px; max-width:520px; margin:0 auto; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink-soft); }
+  .sitebar .brand{ font-family:var(--font-display); font-weight:700; color:var(--ink); font-size:0.95rem; }
+  .sitebar .brand span{ color:var(--amber); }
+  .sitebar a.back{ border:1px solid var(--line); padding:6px 12px; border-radius:100px; }
 
-  /* ---------- MAIN CONTENT ---------- */
-  main{ padding:30px 40px 60px; max-width:980px; }
-  
-  .topbar{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:6px; flex-wrap:wrap; gap:16px; }
-  .topbar h1{ font-family:var(--font-display); font-weight:600; font-size:1.7rem; margin:0 0 2px; letter-spacing:-0.01em; }
-  .topbar .sub{ font-size:0.85rem; color:var(--ink-soft); font-family:var(--font-mono); }
-  
-  .new-btn{
-    background:var(--amber); color:var(--ink); border:none; padding:12px 20px; font-weight:600; font-size:0.88rem;
-    border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink); transition:transform 0.1s ease, box-shadow 0.1s ease;
-    display:inline-flex; align-items:center; gap:6px;
+  .wrap{ max-width:520px; margin:0 auto; padding:12px 24px 80px; }
+  .intro{ padding:10px 0 24px; text-align:center; }
+  .intro h1{ font-family:var(--font-display); font-size:1.7rem; font-weight:700; letter-spacing:-0.01em; margin:0 0 6px; }
+  .intro p{ font-size:0.88rem; color:var(--ink-soft); }
+
+  /* account type toggle */
+  .type-toggle{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:26px; }
+  .type-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 16px; text-align:center; cursor:pointer; transition:border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .new-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .type-card .icon{ font-size:1.5rem; margin-bottom:8px; }
+  .type-card .name{ font-family:var(--font-display); font-weight:600; font-size:0.95rem; }
+  .type-card .desc{ font-size:0.72rem; color:var(--ink-soft); margin-top:4px; line-height:1.4; }
+  .type-card.selected{ border-color:var(--ink); box-shadow:3px 3px 0 var(--line); }
+  .type-card.selected .icon{ filter:none; }
+  .type-card.selected .name{ color:var(--teal); }
 
-  /* Stats Cards (Adaptados para o tema) */
-  .stats{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin:32px 0; }
-  .stat-card{ 
-    background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:20px; 
-    box-shadow:3px 3px 0 var(--line); transition:0.15s;
+  form{ background:var(--white); border:1px solid var(--line); border-radius:var(--radius); box-shadow:4px 4px 0 var(--line); }
+  .slip-head{ background:var(--ink); color:var(--paper); padding:14px 22px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:0.72rem; }
+  .slip-head .status{ color:var(--amber); }
+
+  .field-group{ padding:24px 24px 6px; }
+  .field{ margin-bottom:18px; }
+  label{ display:block; font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); margin-bottom:8px; }
+  input, select{
+    width:100%; font-family:var(--font-body); font-size:0.92rem; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    padding:12px 14px; outline:none; transition:border-color 0.15s ease, background 0.15s ease;
   }
-  .stat-card:hover{ transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink); border-color:var(--ink); }
-  .stat-card .label{ font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px; }
-  .stat-card .value{ font-family:var(--font-display); font-size:1.8rem; font-weight:700; color:var(--ink); }
-  .stat-card.highlight{ border-color:var(--teal); box-shadow:3px 3px 0 var(--teal); }
-  .stat-card.highlight .value{ color:var(--teal); }
+  input:focus, select:focus{ border-color:var(--teal); background:var(--white); }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 
-  .section-title{ font-family:var(--font-display); font-size:1.1rem; margin:32px 0 16px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+  .client-only{ border-top:1px dashed var(--line); margin-top:6px; padding-top:20px; }
+  .section-note{ font-family:var(--font-mono); font-size:0.68rem; color:var(--teal); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px; }
 
-  /* ---------- TICKET LIST (Estilo Minhas Demandas) ---------- */
-  .ticket-list{ display:flex; flex-direction:column; gap:16px; }
-  .ticket{
-    display:grid; grid-template-columns:96px 1fr; background:var(--white); border:1px solid var(--line);
-    border-radius:var(--radius); overflow:hidden; transition:box-shadow 0.15s ease, transform 0.15s ease; cursor:pointer;
+  .submit-row{ padding:18px 24px 26px; }
+  .create-btn{
+    width:100%; background:var(--amber); color:var(--ink); border:none; padding:14px;
+    font-weight:600; font-size:0.9rem; border-radius:var(--radius); box-shadow:3px 3px 0 var(--ink);
+    transition:transform 0.1s ease, box-shadow 0.1s ease;
   }
-  .ticket:hover{ box-shadow:4px 4px 0 var(--line); transform:translate(-1px,-1px); border-color:var(--ink); }
-  
-  .ticket-stub{
-    background:var(--ink); color:var(--paper); padding:16px 12px; display:flex; flex-direction:column;
-    justify-content:space-between; position:relative; border-right:2px dashed var(--paper-deep);
-  }
-  /* Efeito de "furo" do bilhete */
-  .ticket-stub::before, .ticket-stub::after{ content:""; position:absolute; right:-7px; width:14px; height:14px; background:var(--paper); border-radius:50%; }
-  .ticket-stub::before{ top:-7px; } .ticket-stub::after{ bottom:-7px; }
-  
-  .ticket-date{ font-family:var(--font-mono); font-size:0.95rem; font-weight:600; line-height:1.2; }
-  .ticket-date small{ display:block; font-size:0.62rem; font-weight:400; color:rgba(241,236,222,0.55); margin-top:2px; }
-  .ticket-type{ font-family:var(--font-mono); font-size:0.66rem; color:var(--amber); margin-top:4px; }
+  .create-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .create-btn:disabled{ opacity:0.7; cursor:not-allowed; }
+  .terms{ font-size:0.72rem; color:var(--ink-soft); text-align:center; margin-top:14px; font-family:var(--font-mono); }
 
-  .ticket-body{ padding:16px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
-  .ticket-main{ min-width:220px; flex:1; }
-  .ticket-service{ font-family:var(--font-display); font-weight:600; font-size:1.02rem; margin-bottom:3px; }
-  .ticket-loc{ font-size:0.83rem; color:var(--ink-soft); }
-  .ticket-desc{ font-size:0.8rem; color:var(--ink-soft); margin-top:6px; max-width:40ch; line-height:1.4; }
-  .ticket-tags{ display:flex; gap:6px; margin-top:8px; flex-wrap:wrap; }
-  .tag{ font-family:var(--font-mono); font-size:0.66rem; padding:2px 7px; background:var(--paper-deep); border-radius:100px; color:var(--ink-soft); }
+  .login-note{ text-align:center; font-size:0.85rem; color:var(--ink-soft); margin-top:22px; }
+  .login-note a{ color:var(--teal); font-weight:600; }
 
-  .stamp{
-    font-family:var(--font-display); font-weight:700; font-size:0.7rem; letter-spacing:0.03em; padding:6px 11px;
-    border-radius:var(--radius); text-transform:uppercase; transform:rotate(-3deg); white-space:nowrap; border:2px solid currentColor;
-  }
-  .stamp.demanda-aberta{ color:var(--teal); }
-  .stamp.demanda-propostas{ color:var(--amber-deep); }
-  .stamp.os-andamento{ color:var(--amber); border-color:var(--amber); background:rgba(240,162,2,0.05); }
-  .stamp.concluida{ color:var(--teal-soft); opacity:0.8; border-style: dashed; }
-
-  .ticket-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; min-width:140px; }
-  .provider-mini{ font-size:0.76rem; color:var(--ink-soft); font-family:var(--font-mono); text-align:right; }
-  .view-btn{ font-size:0.76rem; padding:8px 14px; border:1px solid var(--line); background:var(--paper); border-radius:100px; color:var(--ink); font-weight:600; transition:0.15s; }
-  .ticket:hover .view-btn{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
-
-  @media (max-width: 768px){
-    .app{ grid-template-columns:1fr; }
-    aside{ flex-direction:row; align-items:center; padding:16px 18px; gap:20px; overflow-x:auto; }
-    aside nav{ flex-direction:row; gap:4px; } .sidebar-foot{ display:none; }
-    main{ padding:22px 18px 50px; }
-    .stats{ grid-template-columns:1fr; }
-    .ticket{ grid-template-columns:70px 1fr; }
-    .ticket-body{ flex-direction:column; align-items:flex-start; }
-    .ticket-actions{ align-items:flex-start; width:100%; margin-top:12px; }
-    .view-btn{ width:100%; text-align:center; }
-  }
+  @media (max-width:480px){ .field-row{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 
-<div class="app">
-  <aside>
-    <div class="brand">Demanda<span>rápida</span></div>
-    <nav>
-      <a class="nav-item active" href="dashboard-cliente.html"><span class="nav-icon">▤</span> Visão Geral</a>
-      <a class="nav-item" href="minhas-demandas.html"><span class="nav-icon">✉</span> Minhas Demandas</a>
-      <a class="nav-item" href="serviços-contratados.html"><span class="nav-icon">🛠️</span> Serviços Contratados</a>
-      <a class="nav-item" href="meu-perfil.html"><span class="nav-icon">⚙️</span> Meus Dados</a>
-      <a class="nav-item" href="../index.html" style="color:var(--danger);">🚪<span class="nav-icon"></span> Sair</a>
-    </nav>
-    <div class="sidebar-foot">
-      Olá, Maria<br>Águas Claras, DF
-      <div class="role-tag">conta cliente</div>
-    </div>
-  </aside>
-
-  <main>
-    <div class="topbar">
-      <div>
-        <h1>Painel do Cliente</h1>
-        <div class="sub">Acompanhe suas solicitações e serviços em um só lugar.</div>
-      </div>
-      <a class="new-btn" href="nova-demanda.html">＋ Nova Demanda</a>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="stats">
-      <div class="stat-card highlight">
-        <div class="label">Serviços em Andamento</div>
-        <div class="value">1</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Aguardando Propostas</div>
-        <div class="value">2</div>
-      </div>
-      <div class="stat-card">
-        <div class="label">Total Concluídos</div>
-        <div class="value">14</div>
-      </div>
-    </div>
-
-    <h2 class="section-title">Atividade Recente</h2>
-
-    <!-- Lista unificada de Tickets (Demandas e OS) -->
-    <div class="ticket-list" id="activity-list">
-      <!-- Preenchido via JavaScript -->
-    </div>
-
-  </main>
+<div class="sitebar">
+  <div class="brand">Demanda<span>rápida</span></div>
+  <a class="back" href="index.html">já tenho conta →</a>
 </div>
 
+<div class="wrap">
+  <div class="intro">
+    <h1>Criar sua conta</h1>
+    <p>Precisa de um serviço ou presta serviços? Escolha abaixo.</p>
+  </div>
+
+  <div class="type-toggle">
+    <!-- Cliente selecionado por padrão nesta tela -->
+    <div class="type-card selected">
+      <div class="icon">🧑</div>
+      <div class="name">Sou cliente</div>
+      <div class="desc">Quero publicar demandas e contratar prestadores</div>
+    </div>
+    <div class="type-card">
+      <div class="icon">🛠️</div>
+      <div class="name">Sou prestador</div>
+      <div class="desc">Quero receber demandas e gerenciar minhas OS</div>
+    </div>
+  </div>
+
+  <form id="cadastroClienteForm">
+    <div class="slip-head">
+      <span>CADASTRO · CLIENTE</span>
+      <span class="status">100% gratuito</span>
+    </div>
+
+    <div class="field-group">
+      <div class="field">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Ex: João Souza" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="whatsapp">WhatsApp</label>
+          <input type="tel" id="whatsapp" name="whatsapp" placeholder="(61) 90000-0000" required>
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="voce@email.com" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="senha">Criar senha</label>
+        <input type="password" id="senha" name="senha" placeholder="mínimo 8 caracteres" required minlength="8">
+      </div>
+    </div>
+
+    <!-- Seção específica para Cliente -->
+    <div class="field-group client-only">
+      <div class="section-note">Sua localização</div>
+
+      <p style="font-size:0.78rem; color:var(--ink-soft); margin:-8px 0 18px; line-height:1.4;">
+        Isso nos ajuda a mostrar prestadores próximos a você e preencher automaticamente suas futuras demandas.
+      </p>
+
+      <!-- CEP -->
+      <div class="field">
+        <label for="cep">CEP</label>
+        <input
+          type="text"
+          id="cep"
+          name="cep"
+          placeholder="Ex: 71900-000"
+          maxlength="9"
+          inputmode="numeric"
+          autocomplete="postal-code"
+          required
+        >
+        <small id="cep-status" style="display:block; margin-top:6px; font-size:0.75rem;"></small>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="cidade">Cidade</label>
+          <input
+            type="text"
+            id="cidade"
+            name="cidade"
+            placeholder="Ex: Brasília"
+            autocomplete="address-level2"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="bairro">Bairro principal</label>
+          <input
+            type="text"
+            id="bairro"
+            name="bairro"
+            placeholder="Ex: Águas Claras"
+            autocomplete="address-level3"
+            required
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="create-btn">Criar conta e publicar demanda →</button>
+      <div class="terms">ao continuar, você concorda com os termos do OS Rápida</div>
+    </div>
+  </form>
+
+  <div class="login-note">Já tem conta? <a href="index.html">Entrar</a></div>
+</div>
+
+<!-- Alterna visualmente os cards de tipo de conta; clicar em "prestador" leva pro outro cadastro -->
 <script>
-  // Dados simulados misturando Demandas e Ordens de Serviço (OS)
-  const ACTIVITY = [
-    { 
-      type: "os", id: 1088, title: "Instalação elétrica — cômodo extra", 
-      desc: "Instalação completa de fiação e tomadas.", date: "28/08", 
-      status: "os-andamento", statusLabel: "Em andamento",
-      provider: "Carlos Silva", loc: "Águas Claras" 
-    },
-    { 
-      type: "demanda", id: 823, title: "Limpeza de sofá de 3 lugares", 
-      desc: "Sofá de tecido claro, precisa de limpeza profunda.", date: "27/08", 
-      status: "demanda-propostas", statusLabel: "3 propostas recebidas",
-      provider: null, loc: "Águas Claras" 
-    },
-    { 
-      type: "demanda", id: 825, title: "Instalação de ventilador de teto", 
-      desc: "Ventilador novo já comprado, falta só instalar.", date: "27/08", 
-      status: "demanda-aberta", statusLabel: "Aguardando propostas",
-      provider: null, loc: "Sudoeste" 
-    },
-    { 
-      type: "os", id: 950, title: "Troca de resistência do chuveiro", 
-      desc: "Chuveiro parou de esquentar, troca urgente.", date: "15/08", 
-      status: "concluida", statusLabel: "Concluído",
-      provider: "João Marcos", loc: "Águas Claras" 
-    }
-  ];
+  document.querySelectorAll('.type-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
 
-  const listContainer = document.getElementById("activity-list");
-
-  function renderActivity() {
-    listContainer.innerHTML = "";
-    
-    ACTIVITY.forEach(item => {
-      const el = document.createElement("div");
-      el.className = "ticket";
-      
-      // Define o link de destino baseado no tipo
-      const targetUrl = item.type === "demanda" ? `detalhe-demanda-cliente.html?id=${item.id}` : `detalhe-os-cliente.html?id=${item.id}`;
-      el.onclick = () => window.location.href = targetUrl;
-
-      el.innerHTML = `
-        <div class="ticket-stub">
-          <span class="ticket-date">${item.date}<small>${item.type === 'demanda' ? 'DEM' : 'OS'} #${item.id}</small></span>
-          <span class="ticket-type">${item.type === 'demanda' ? 'DEMANDA' : 'ORDEM DE SERVIÇO'}</span>
-        </div>
-        <div class="ticket-body">
-          <div class="ticket-main">
-            <div class="ticket-service">${item.title}</div>
-            <div class="ticket-loc">📍 ${item.loc}</div>
-            <div class="ticket-desc">"${item.desc}"</div>
-            <div class="ticket-tags">
-              <span class="tag">${item.type === 'demanda' ? 'Busca por Profissional' : 'Serviço Contratado'}</span>
-            </div>
-          </div>
-          
-          <div class="ticket-actions">
-            <span class="stamp ${item.status}">${item.statusLabel}</span>
-            ${item.provider ? `<span class="provider-mini">Prestador:<br><strong>${item.provider}</strong></span>` : ""}
-            <span class="view-btn">Ver detalhes →</span>
-          </div>
-        </div>
-      `;
-      listContainer.appendChild(el);
+      if (card.querySelector('.name').textContent.includes('prestador')) {
+        window.location.href = 'cadastro-prestador.html';
+      }
     });
-  }
-
-  renderActivity();
+  });
 </script>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+  // Busca endereço pelo CEP (ViaCEP) e preenche cidade/bairro automaticamente
+  async function buscarEnderecoPorCep(cep) {
+    const cepLimpo = cep.replace(/\D/g, '');
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    const cepStatus = document.getElementById('cep-status');
+    const cepInput = document.getElementById('cep');
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+
+      if (!response.ok) {
+        throw new Error('Erro na resposta do ViaCEP');
+      }
+
+      const data = await response.json();
+
+      if (data.erro) {
+        if (cepStatus) {
+          cepStatus.textContent = 'CEP não encontrado';
+          cepStatus.style.color = 'var(--danger)';
+        }
+        return;
+      }
+
+      const bairro = document.getElementById('bairro');
+      const cidade = document.getElementById('cidade');
+
+      if (bairro) bairro.value = data.bairro || bairro.value;
+      if (cidade) cidade.value = data.localidade || cidade.value;
+
+      if (cepInput) {
+        cepInput.style.borderColor = '#28a745';
+      }
+      if (cepStatus) {
+        cepStatus.textContent = `${data.localidade || ''} - ${data.uf || ''}`;
+        cepStatus.style.color = 'var(--teal)';
+      }
+
+    } catch (error) {
+      console.error('Erro ao buscar CEP:', error);
+      if (cepStatus) {
+        cepStatus.textContent = 'Erro ao buscar o CEP. Tente novamente.';
+        cepStatus.style.color = 'var(--danger)';
+      }
+    }
+  }
+
+  // Máscara para o CEP
+  function aplicarMascaraCEP(cep) {
+    cep = cep.replace(/\D/g, '');
+    cep = cep.replace(/^(\d{5})(\d)/, '$1-$2');
+    return cep;
+  }
+
+  // Formatar WhatsApp
+  function formatarWhatsApp(value) {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 3)} ${numbers.slice(3, 7)}-${numbers.slice(7)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 3)} ${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Formatar CEP ao digitar e buscar endereço quando completo
+    const cepInput = document.getElementById('cep');
+    if (cepInput) {
+      cepInput.addEventListener('input', (e) => {
+        e.target.value = aplicarMascaraCEP(e.target.value);
+        if (e.target.value.replace(/\D/g, '').length === 8) {
+          buscarEnderecoPorCep(e.target.value);
+        }
+      });
+
+      cepInput.addEventListener('blur', (e) => {
+        const cepLimpo = e.target.value.replace(/\D/g, '');
+        if (cepLimpo.length === 8) {
+          buscarEnderecoPorCep(e.target.value);
+        }
+      });
+    }
+
+    // Formatar WhatsApp ao digitar
+    const whatsappInput = document.getElementById('whatsapp');
+    if (whatsappInput) {
+      whatsappInput.addEventListener('input', (e) => {
+        const cursorPosition = e.target.selectionStart;
+        const formatted = formatarWhatsApp(e.target.value);
+        e.target.value = formatted;
+        if (cursorPosition < formatted.length) {
+          e.target.setSelectionRange(cursorPosition, cursorPosition);
+        }
+      });
+    }
+  });
+
+  // Único listener de submit — envia os campos que realmente existem no formulário
+  document.getElementById('cadastroClienteForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+
+    const dados = {
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('whatsapp').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      password: document.getElementById('senha').value,
+      cidade: document.getElementById('cidade').value.trim(),
+      bairro: document.getElementById('bairro').value.trim(),
+      cep: cep || null,
+      tipo: 'cliente'
+    };
+
+    const btn = e.target.querySelector('.create-btn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Criando conta...';
+    btn.disabled = true;
+
+    const result = await Auth.register(dados);
+
+    if (result.success) {
+      window.location.href = 'cliente/dashboard-cliente.html';
+    } else {
+      alert('Erro: ' + result.error);
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>
