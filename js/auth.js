@@ -7,24 +7,40 @@ const Auth = {
   // ---------- CADASTRO ----------
   async register({ email, password, nome, whatsapp, tipo, cidade, bairro, cep, service_types }) {
     try {
+
+      // Verifica se o cliente Supabase foi carregado
+      if (!window.supabaseClient) {
+        throw new Error('Cliente Supabase não foi inicializado.');
+      }
+
       // 1. Cria o usuário no Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error } = await window.supabaseClient.auth.signUp({
         email,
         password,
         options: {
-          data: { nome, tipo, whatsapp }
+          data: {
+            nome,
+            tipo,
+            whatsapp
+          }
         }
       });
 
       if (error) throw error;
 
+      // Se a confirmação de e-mail estiver ativada,
+      // o Supabase pode criar o usuário sem retornar uma sessão.
+      if (!data.user) {
+        throw new Error('Usuário não foi criado.');
+      }
+
       const userId = data.user.id;
 
-      // 2. Atualiza o perfil criado pelo trigger com os dados extras
-      const { error: profileError } = await supabase
+      // 2. Atualiza o perfil criado pelo trigger
+      const { error: profileError } = await window.supabaseClient
         .from('profiles')
         .update({
-          whatsapp,
+          whatsapp: whatsapp || null,
           cidade: cidade || null,
           bairro: bairro || null,
           cep: cep || null
@@ -35,42 +51,62 @@ const Auth = {
 
       // 3. Se for prestador, vincula os tipos de serviço
       if (tipo === 'prestador' && service_types?.length) {
+
         const vinculos = service_types.map(stId => ({
           provider_id: userId,
-          service_type_id: parseInt(stId)
+          service_type_id: parseInt(stId, 10)
         }));
 
-        const { error: vincError } = await supabase
+        const { error: vincError } = await window.supabaseClient
           .from('provider_service_types')
           .insert(vinculos);
 
         if (vincError) throw vincError;
       }
 
-      return { success: true, user: data.user };
+      return {
+        success: true,
+        user: data.user
+      };
 
     } catch (error) {
       console.error('Erro no cadastro:', error);
-      return { success: false, error: error.message };
+
+      return {
+        success: false,
+        error: error.message
+      };
     }
   },
+
 
   // ---------- LOGIN ----------
   async login(email, password) {
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+
+      if (!window.supabaseClient) {
+        throw new Error('Cliente Supabase não foi inicializado.');
+      }
+
+      const { data, error } =
+        await window.supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
 
       if (error) throw error;
 
       // Busca o tipo do usuário
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('tipo, nome')
-        .eq('id', data.user.id)
-        .single();
+      const { data: profile, error: profileError } =
+        await window.supabaseClient
+          .from('profiles')
+          .select('tipo, nome')
+          .eq('id', data.user.id)
+          .single();
+
+      if (profileError) {
+        console.error('Erro ao buscar perfil:', profileError);
+      }
 
       // Redireciona baseado no tipo
       if (profile?.tipo === 'cliente') {
@@ -79,44 +115,72 @@ const Auth = {
         window.location.href = 'prestador/dashboard.html';
       }
 
-      return { success: true, user: data.user, profile };
+      return {
+        success: true,
+        user: data.user,
+        profile
+      };
 
     } catch (error) {
+
       console.error('Erro no login:', error);
+
       let mensagem = 'Erro ao fazer login';
-      if (error.message.includes('Invalid login credentials')) {
+
+      if (error.message?.includes('Invalid login credentials')) {
         mensagem = 'E-mail ou senha incorretos';
       }
-      return { success: false, error: mensagem };
+
+      return {
+        success: false,
+        error: mensagem
+      };
     }
   },
 
+
   // ---------- LOGOUT ----------
   async logout() {
-    await supabase.auth.signOut();
-    window.location.href = 'index.html';
+
+    try {
+      await window.supabaseClient.auth.signOut();
+    } finally {
+      window.location.href = 'index.html';
+    }
   },
+
 
   // ---------- VERIFICAR SESSÃO ----------
   async getCurrentUser() {
-    const { data: { user } } = await supabase.auth.getUser();
+
+    const {
+      data: { user }
+    } = await window.supabaseClient.auth.getUser();
+
     return user;
   },
 
+
   // ---------- BUSCAR ENDEREÇO POR CEP ----------
   async buscarEnderecoPorCep(cep) {
+
     try {
+
       // Remove caracteres não numéricos
       const cepLimpo = cep.replace(/\D/g, '');
-      
+
       // Verifica se o CEP tem 8 dígitos
       if (cepLimpo.length !== 8) {
-        return { success: false, error: 'CEP inválido. Digite 8 números.' };
+        return {
+          success: false,
+          error: 'CEP inválido. Digite 8 números.'
+        };
       }
 
       // Faz a requisição para a API ViaCEP
-      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-      
+      const response =
+        await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+
       if (!response.ok) {
         throw new Error('Erro ao buscar CEP');
       }
@@ -125,7 +189,10 @@ const Auth = {
 
       // Verifica se o CEP foi encontrado
       if (data.erro) {
-        return { success: false, error: 'CEP não encontrado' };
+        return {
+          success: false,
+          error: 'CEP não encontrado'
+        };
       }
 
       // Retorna os dados do endereço
@@ -142,15 +209,23 @@ const Auth = {
       };
 
     } catch (error) {
+
       console.error('Erro ao buscar CEP:', error);
-      return { success: false, error: 'Erro ao buscar o CEP. Tente novamente.' };
+
+      return {
+        success: false,
+        error: 'Erro ao buscar o CEP. Tente novamente.'
+      };
     }
   },
 
+
   // ---------- ATUALIZAR PERFIL COM CEP ----------
   async atualizarPerfilComCep(userId, dadosAtualizados) {
+
     try {
-      const { error } = await supabase
+
+      const { error } = await window.supabaseClient
         .from('profiles')
         .update({
           cep: dadosAtualizados.cep || null,
@@ -164,13 +239,21 @@ const Auth = {
 
       if (error) throw error;
 
-      return { success: true };
+      return {
+        success: true
+      };
 
     } catch (error) {
+
       console.error('Erro ao atualizar perfil:', error);
-      return { success: false, error: error.message };
+
+      return {
+        success: false,
+        error: error.message
+      };
     }
   }
 };
 
+// Disponibiliza o módulo globalmente
 window.Auth = Auth;
