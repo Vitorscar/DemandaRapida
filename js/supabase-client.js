@@ -9,8 +9,8 @@ const SUPABASE_URL = 'https://fwzwiovycsphfrcfrjad.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Rv3ia0kJOieOeSaj4sIKXg_rLl_sk9L';
 
 const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
 );
 
 // Disponibiliza a instância para os outros arquivos
