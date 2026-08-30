@@ -5,7 +5,19 @@
 const Auth = {
 
   // ---------- CADASTRO ----------
-  async register({ email, password, nome, whatsapp, tipo, cidade, bairro, cep, service_types }) {
+  async register({
+    email,
+    password,
+    nome,
+    cpf,
+    whatsapp,
+    tipo,
+    cidade,
+    bairro,
+    cep,
+    complemento
+  }) {
+
     try {
 
       // Verifica se o cliente Supabase foi carregado
@@ -20,6 +32,7 @@ const Auth = {
         options: {
           data: {
             nome,
+            cpf,
             tipo,
             whatsapp
           }
@@ -41,9 +54,11 @@ const Auth = {
         .from('profiles')
         .update({
           whatsapp: whatsapp || null,
+          cpf: cpf || null,
           cidade: cidade || null,
           bairro: bairro || null,
-          cep: cep || null
+          cep: cep || null,
+          complemento: complemento || null
         })
         .eq('id', userId);
 
@@ -70,6 +85,7 @@ const Auth = {
       };
 
     } catch (error) {
+
       console.error('Erro no cadastro:', error);
 
       return {
@@ -82,6 +98,7 @@ const Auth = {
 
   // ---------- LOGIN ----------
   async login(email, password) {
+
     try {
 
       if (!window.supabaseClient) {
@@ -143,9 +160,13 @@ const Auth = {
   async logout() {
 
     try {
+
       await window.supabaseClient.auth.signOut();
+
     } finally {
+
       window.location.href = 'index.html';
+
     }
   },
 
@@ -171,6 +192,7 @@ const Auth = {
 
       // Verifica se o CEP tem 8 dígitos
       if (cepLimpo.length !== 8) {
+
         return {
           success: false,
           error: 'CEP inválido. Digite 8 números.'
@@ -189,6 +211,7 @@ const Auth = {
 
       // Verifica se o CEP foi encontrado
       if (data.erro) {
+
         return {
           success: false,
           error: 'CEP não encontrado'
@@ -254,6 +277,7 @@ const Auth = {
     }
   }
 };
+
 
 // Disponibiliza o módulo globalmente
 window.Auth = Auth;
