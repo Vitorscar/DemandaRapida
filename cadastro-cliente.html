@@ -201,9 +201,38 @@
     const whatsappInput = document.getElementById('whatsapp');
     const cepInput = document.getElementById('cep');
 
-    const mascaraCPF = (v) => v.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    const mascaraWhatsApp = (v) => v.replace(/\D/g, '').replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d)(\d{4})$/, '$1-$2');
-    const mascaraCEP = (v) => v.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
+    // CPF
+    const mascaraCPF = (v) => {
+      return v
+        .replace(/\D/g, '')
+        .slice(0, 11)
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    };
+
+    // WhatsApp
+    const mascaraWhatsApp = (v) => {
+      let numeros = v.replace(/\D/g, '').slice(0, 11);
+
+      if (numeros.length <= 2) {
+        return numeros.length ? `(${numeros}` : '';
+      }
+
+      if (numeros.length <= 7) {
+        return `(${numeros.slice(0, 2)}) ${numeros.slice(2)}`;
+      }
+
+      return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`;
+    };
+
+    // CEP
+    const mascaraCEP = (v) => {
+      return v
+        .replace(/\D/g, '')
+        .slice(0, 8)
+        .replace(/^(\d{5})(\d)/, '$1-$2');
+    };
 
     if (cpfInput) {
       cpfInput.addEventListener('input', (e) => { e.target.value = mascaraCPF(e.target.value); });
@@ -211,13 +240,7 @@
 
     if (whatsappInput) {
       whatsappInput.addEventListener('input', (e) => {
-        const cursorPosition = e.target.selectionStart;
-        const formatted = mascaraWhatsApp(e.target.value);
-        e.target.value = formatted;
-        // Mantém o cursor no lugar certo ao editar no meio do texto
-        if (cursorPosition < formatted.length) {
-          e.target.setSelectionRange(cursorPosition, cursorPosition);
-        }
+        e.target.value = mascaraWhatsApp(e.target.value);
       });
     }
 
@@ -304,6 +327,7 @@
           cidade: document.getElementById('cidade').value.trim(),
           bairro: document.getElementById('bairro').value.trim(),
           cep: document.getElementById('cep').value.replace(/\D/g, '') || null,
+          complemento: document.getElementById('complemento').value.trim() || null,
           tipo: 'cliente'
         };
 
@@ -316,7 +340,6 @@
         }
 
         try {
-          // Supondo que Auth.register esteja corretamente implementado em js/auth.js
           const result = await Auth.register(dados);
 
           if (result.success) {
